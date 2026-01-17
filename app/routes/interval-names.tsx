@@ -8,6 +8,7 @@ import type { Result } from '~/types/game';
 import { GameHint } from '~/components/game/gameHint';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
+import { GameSummary } from '~/components/game/gameSummary';
 
 type GameData = {
   readonly rootNote: Note;
@@ -26,6 +27,7 @@ function generateData(): GameData {
 const ROUNDS = 10;
 
 export default function () {
+  const [gameEnd, setGameEnd] = useState(false);
   const [data, setData] = useState(generateData());
   const [timer, setTimer] = useState(true);
   const [results, setResults] = useState<Result[]>([]);
@@ -47,7 +49,6 @@ export default function () {
 
     setResults([...results, currentResult]);
     setResult(currentResult);
-
     setCounter(counter + 1);
   };
 
@@ -58,7 +59,12 @@ export default function () {
 
   const onContinue = () => {
     setResult(null);
-    setData(generateData());
+
+    if (results.length === ROUNDS) {
+      setGameEnd(true);
+    } else {
+      setData(generateData());
+    }
   };
 
   return (
@@ -66,7 +72,7 @@ export default function () {
       <GameNav />
       <div className="grow flex flex-col gap-3 items-center justify-center">
         {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
-        {!timer && !result && (
+        {!gameEnd && !timer && !result && (
           <>
             <TypographyH3>
               {counter + 1} of {ROUNDS}
@@ -76,7 +82,8 @@ export default function () {
             </TypographyH1>
           </>
         )}
-        {result && <GameResult result={result} onContinue={onContinue} />}
+        {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
+        {gameEnd && <GameSummary results={results} />}
       </div>
       {!timer && !result && (
         <div className="flex flex-col items-center justify-center p-6">
