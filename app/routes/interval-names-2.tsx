@@ -1,0 +1,89 @@
+import { type Interval, randomInterval, semitones } from '~/music/interval';
+import { useState } from 'react';
+import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
+import { GameNav } from '~/components/game/gameNav';
+import type { Result } from '~/types/game';
+import { GameTimer } from '~/components/game/gameTimer';
+import { GameResult } from '~/components/game/gameResult';
+import { GameSummary } from '~/components/game/gameSummary';
+import { IntervalsSelector } from '~/components/keyboard/intervals-selector';
+
+type GameData = {
+  readonly interval: Interval;
+  readonly timeStart: number;
+};
+
+function generateData(): GameData {
+  return {
+    interval: randomInterval(),
+    timeStart: new Date().getTime()
+  };
+}
+
+const ROUNDS = 10;
+
+export default function () {
+  const [gameEnd, setGameEnd] = useState(false);
+  const [data, setData] = useState(generateData());
+  const [timer, setTimer] = useState(true);
+  const [results, setResults] = useState<Result[]>([]);
+  const [result, setResult] = useState<Result | null>(null);
+  const [counter, setCounter] = useState(0);
+
+  const onIntervalSelected = (interval: Interval): void => {
+    const check = interval === data.interval;
+    const difference = semitones(data.interval);
+    const currentResult: Result = {
+      result: check,
+      time: new Date().getTime() - data.timeStart,
+      description: check
+        ? `${interval} is difference of ${difference} semitones.`
+        : `${data.interval} is difference of ${difference} semitones. Your answer was ${interval} - ${semitones(interval)} semitones.`
+    };
+
+    setResults([...results, currentResult]);
+    setResult(currentResult);
+    setCounter(counter + 1);
+  };
+
+  const timerEnd = () => {
+    setTimer(false);
+    setData(generateData());
+  };
+
+  const onContinue = () => {
+    setResult(null);
+
+    if (results.length === ROUNDS) {
+      setGameEnd(true);
+    } else {
+      setData(generateData());
+    }
+  };
+
+  return (
+    <div className="h-screen flex flex-col items-center justify-center h">
+      <GameNav />
+      <div className="grow flex flex-col gap-3 items-center justify-center">
+        {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
+        {!gameEnd && !timer && !result && (
+          <>
+            <TypographyH3>
+              {counter + 1} of {ROUNDS}
+            </TypographyH3>
+            <TypographyH1>
+              Name interval of <span className="text-primary">{semitones(data.interval)}</span> semitones
+            </TypographyH1>
+          </>
+        )}
+        {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
+        {gameEnd && <GameSummary results={results} />}
+      </div>
+      {!timer && !result && (
+        <div className="flex flex-col items-center justify-center p-6">
+          <IntervalsSelector onIntervalClick={onIntervalSelected} />
+        </div>
+      )}
+    </div>
+  );
+}

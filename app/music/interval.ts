@@ -16,13 +16,13 @@ export enum Interval {
   PerfectOctave = 'Perfect octave'
 }
 
+export const intervalArray = Object.values(Interval);
+
 export function semitones(interval: Interval): number {
   return Object.values(Interval).indexOf(interval);
 }
 
 export function randomInterval(): Interval {
-  const intervalArray = Object.values(Interval);
-
   const length = intervalArray.length;
   const random = Math.floor(Math.random() * length);
   return intervalArray.at(random) || Interval.PerfectOctave;
