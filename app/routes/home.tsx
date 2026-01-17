@@ -2,8 +2,10 @@ import { TypographyH1, TypographyP } from '~/components/ui/typography';
 import { Button } from '~/components/ui/button';
 import { ArrowRight, Library } from 'lucide-react';
 import { Separator } from '~/components/ui/separator';
+import { useNavigate } from 'react-router';
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center h-screen m-auto text-center">
       <Library size={150} className="mb-3" />
@@ -12,7 +14,7 @@ export default function Home() {
       <div className="w-96 my-6">
         <Separator />
       </div>
-      <Button variant="default">
+      <Button variant="default" onClick={() => navigate('/play')}>
         Continue to the app <ArrowRight />
       </Button>
     </div>
