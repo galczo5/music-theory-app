@@ -19,7 +19,7 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
   };
 
   const playNote = (note: Note) => {
-    if (player) {
+    if (play) {
       player.playNote(note);
     }
 
