@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 import './app.css';
 import { ThemeProvider } from '~/themeProvider';
-import { player, PlayerContext } from '~/components/midi-player/midi-player';
+import { player, PlayerContext } from '~/components/midi-player/player';
 
 export default function App() {
   return (

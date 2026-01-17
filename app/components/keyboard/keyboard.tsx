@@ -1,6 +1,6 @@
 import { Note, notesArray } from '~/music/notes';
 import { useContext } from 'react';
-import { PlayerContext } from '~/components/midi-player/midi-player';
+import { PlayerContext } from '~/components/midi-player/player';
 
 type KeyboardProps = {
   onNoteClick?: (note: Note) => void;
