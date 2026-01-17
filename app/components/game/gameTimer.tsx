@@ -5,7 +5,7 @@ type TimerProps = {
   onTimeout: () => void;
 };
 
-export const Timer = ({ seconds, onTimeout }: TimerProps) => {
+export const GameTimer = ({ seconds, onTimeout }: TimerProps) => {
   const [count, setCount] = useState(seconds);
   const initialized = useRef(false);
 

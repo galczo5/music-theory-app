@@ -1,3 +1,5 @@
+import { type Note, notesArray } from '~/music/notes';
+
 export enum Interval {
   PerfectUnison = 'Perfect unison',
   MinorSecond = 'Minor second',
@@ -24,4 +26,25 @@ export function randomInterval(): Interval {
   const length = intervalArray.length;
   const random = Math.floor(Math.random() * length);
   return intervalArray.at(random) || Interval.PerfectOctave;
+}
+
+export function transpose(rootNote: Note, interval: Interval): Note {
+  if (interval === Interval.PerfectOctave) {
+    return rootNote;
+  }
+
+  let copy = [...notesArray];
+
+  while (copy.at(0) !== rootNote) {
+    const [first, ...rest] = copy;
+    copy = [...rest, first];
+  }
+
+  const result = copy.at(semitones(interval));
+
+  if (!result) {
+    throw new Error('Not enough interval found.');
+  }
+
+  return result;
 }
