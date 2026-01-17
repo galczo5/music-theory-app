@@ -8,6 +8,7 @@ export interface Game {
   readonly name: string;
   readonly description: string;
   readonly type: GameType;
+  readonly path: string;
   readonly disabled?: boolean;
 }
 

@@ -15,6 +15,17 @@ export enum Note {
 
 export const notesArray: Note[] = Object.values(Note);
 
-export function interval(note1: Note, note2: Note): number {
-  return Math.abs(notesArray.indexOf(note1) - notesArray.indexOf(note2));
+export function interval(rootNote: Note, note2: Note): number {
+  let copy = [...notesArray];
+
+  while (copy.at(0) !== rootNote) {
+    const [first, ...rest] = copy;
+    copy = [...rest, first];
+  }
+
+  return Math.abs(copy.indexOf(note2) - copy.indexOf(rootNote));
+}
+
+export function randomNote(): Note {
+  return notesArray[Math.floor(Math.random() * notesArray.length)];
 }
