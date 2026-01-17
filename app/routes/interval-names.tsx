@@ -85,10 +85,10 @@ export default function () {
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
       </div>
-      {!timer && !result && (
+      {!gameEnd && !timer && !result && (
         <div className="flex flex-col items-center justify-center p-6">
           <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
-          <Keyboard onNoteClick={onNoteSelected} selectedNote={data.rootNote} />
+          <Keyboard onNoteClick={onNoteSelected} selectedNote={data.rootNote} play={true} />
         </div>
       )}
     </div>

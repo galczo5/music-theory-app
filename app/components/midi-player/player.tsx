@@ -7,8 +7,8 @@ class Player {
 
   constructor() {
     if (!Player.synth) {
-      // Player.synth = new Synth();
-      // Player.synth.toDestination();
+      Player.synth = new Synth();
+      Player.synth.toDestination();
     }
   }
 

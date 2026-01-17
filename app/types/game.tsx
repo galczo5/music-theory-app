@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { Music, Speaker } from 'lucide-react';
+import { Hammer, Music, Speaker } from 'lucide-react';
 
 export type GameType = 'theory' | 'listen';
 
@@ -13,6 +13,10 @@ export interface Game {
 }
 
 export function getGameIcon(game: Game): ReactElement {
+  if (game.disabled) {
+    return <Hammer />;
+  }
+
   switch (game.type) {
     case 'listen':
       return <Speaker size={20} />;

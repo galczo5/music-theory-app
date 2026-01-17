@@ -15,7 +15,7 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
   const noteColor = (note: Note) => {
     if (note === selectedNote) return 'bg-primary text-white border-black';
     if (note.includes('#')) return 'bg-black text-white border-black hover:bg-gray-900';
-    return 'bg-white text-black hover:bg-gray-100';
+    return 'bg-white text-black hover:bg-gray-100 border dark:border-black';
   };
 
   const playNote = (note: Note) => {

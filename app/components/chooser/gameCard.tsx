@@ -10,8 +10,9 @@ type GameCardProp = {
 
 export const GameCard = ({ game }: GameCardProp) => {
   const navigate = useNavigate();
+  const disabledStyle = game.disabled ? 'grayscale select-none' : '';
   return (
-    <Card className="w-full">
+    <Card className={`w-full ${disabledStyle}`}>
       <CardHeader>
         <div className="flex gap-3 items-center">
           {getGameIcon(game)}
@@ -20,8 +21,8 @@ export const GameCard = ({ game }: GameCardProp) => {
         <CardDescription>{game.description}</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button onClick={() => navigate(game.path)}>
-          Play
+        <Button onClick={() => navigate(game.path)} disabled={game.disabled}>
+          {game.disabled ? 'Available soon' : 'Play'}
           <ArrowRight />
         </Button>
       </CardFooter>
