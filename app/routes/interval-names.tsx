@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
 import { GameNav } from '~/components/game/gameNav';
 import type { Result } from '~/types/game';
+import { GameHint } from '~/components/game/gameHint';
 
 type GameData = {
   readonly rootNote: Note;
@@ -64,7 +65,8 @@ export default function () {
           <span className="text-primary">{data.interval}</span> of {data.rootNote}
         </TypographyH1>
       </div>
-      <div className="flex justify-center p-6">
+      <div className="flex flex-col items-center justify-center p-6">
+        <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
         <Keyboard onNoteClick={onNoteSelected} selectedNote={data.rootNote} />
       </div>
     </div>

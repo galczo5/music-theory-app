@@ -27,7 +27,7 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
   };
 
   return (
-    <div className="relative w-96 h-40 text-xs">
+    <div className="relative w-84 h-40 text-xs">
       {/* White keys */}
       <div className="flex absolute top-0 left-0">
         {notes.map((x) => (
