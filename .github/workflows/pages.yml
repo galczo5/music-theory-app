@@ -28,6 +28,9 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Build
+        run: node scripts/pre-deploy.cjs
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
