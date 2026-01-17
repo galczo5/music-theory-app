@@ -1,17 +1,29 @@
 import { Note, notesArray } from '~/music/notes';
+import { useContext } from 'react';
+import { PlayerContext } from '~/components/midi-player/midi-player';
 
 type KeyboardProps = {
   onNoteClick?: (note: Note) => void;
   selectedNote?: Note;
+  play?: boolean;
 };
 
-export const Keyboard = ({ onNoteClick, selectedNote }: KeyboardProps) => {
+export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => {
   const notes = notesArray.filter((x) => !x.includes('#'));
+  const player = useContext(PlayerContext);
 
   const noteColor = (note: Note) => {
     if (note === selectedNote) return 'bg-primary text-white border-black';
     if (note.includes('#')) return 'bg-black text-white border-black hover:bg-gray-900';
     return 'bg-white text-black hover:bg-gray-100';
+  };
+
+  const playNote = (note: Note) => {
+    if (player) {
+      player.playNote(note);
+    }
+
+    onNoteClick && onNoteClick(note);
   };
 
   return (
@@ -20,7 +32,7 @@ export const Keyboard = ({ onNoteClick, selectedNote }: KeyboardProps) => {
       <div className="flex absolute top-0 left-0">
         {notes.map((x) => (
           <div
-            onClick={() => onNoteClick && onNoteClick(x)}
+            onClick={() => playNote(x)}
             className={noteColor(x) + ' pb-4 w-12 h-40 border flex items-end justify-center rounded cursor-pointer'}
           >
             {x}
@@ -37,7 +49,7 @@ export const Keyboard = ({ onNoteClick, selectedNote }: KeyboardProps) => {
           if (isSharp) {
             return (
               <div
-                onClick={() => onNoteClick && onNoteClick(x)}
+                onClick={() => playNote(x)}
                 className={noteColor(x) + ' pb-2 w-6 h-24 flex items-end justify-center rounded cursor-pointer'}
               >
                 {x}
