@@ -1,16 +1,25 @@
-import { Button } from '~/components/ui/button';
-import { ArrowRight, Library, Music2 } from 'lucide-react';
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '~/components/ui/item';
+import { Github, Library } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { TypographyH1 } from '~/components/ui/typography';
+import { GamesList } from '~/components/chooser/gamesList';
+import { GAMES } from '~/config/games';
+import { Button } from '~/components/ui/button';
 
 export default function () {
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
-        <div className="flex items-center p-6 gap-3">
-          <Library size={50} />
-          <TypographyH1>Music Theory App</TypographyH1>
+      <div className="flex flex-col p-6">
+        <div className="flex justify-between items-center pb-6">
+          <div className="flex items-center gap-3">
+            <Library size={50} />
+            <TypographyH1>Music Theory App</TypographyH1>
+          </div>
+          <div>
+            <Button variant="outline">
+              <Github />
+              Check out in GitHub
+            </Button>
+          </div>
         </div>
         <Tabs defaultValue="games">
           <TabsList>
@@ -18,29 +27,11 @@ export default function () {
             <TabsTrigger value="stats">Your progress</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
-          <TabsContent value="games"></TabsContent>
+          <TabsContent value="games">
+            <GamesList games={GAMES} />
+          </TabsContent>
           <TabsContent value="settigns"></TabsContent>
         </Tabs>
-      </div>
-      <div className="max-w-1/2 grid grid-cols-2 gap-6 p-6 m-auto">
-        <Item variant="outline">
-          <ItemMedia variant="icon">
-            <Music2 />
-          </ItemMedia>
-          <ItemContent>
-            <ItemTitle>Interval names</ItemTitle>
-            <ItemDescription>
-              Test your knowledge of interval distances by identifying the exact number of semitones for each given
-              interval name.
-            </ItemDescription>
-          </ItemContent>
-          <ItemActions>
-            <Button variant="link">
-              Play
-              <ArrowRight />
-            </Button>
-          </ItemActions>
-        </Item>
       </div>
     </>
   );

@@ -14,3 +14,8 @@ test('interval should calculate difference between higher and lower note', () =>
   const result = interval(Note.D, Note.C);
   expect(result).eq(2);
 });
+
+test('interval should calculate difference between the same note', () => {
+  const result = interval(Note.D, Note.D);
+  expect(result).eq(0);
+});
