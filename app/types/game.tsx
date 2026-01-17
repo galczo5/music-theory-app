@@ -20,3 +20,9 @@ export function getGameIcon(game: Game): ReactElement {
       return <Music size={20} />;
   }
 }
+
+export interface Result {
+  readonly result: boolean;
+  readonly time: number;
+  readonly description?: string;
+}

@@ -2,45 +2,71 @@ import { Keyboard } from '~/components/keyboard/keyboard';
 import { interval, type Note, randomNote } from '~/music/notes';
 import { type Interval, randomInterval, semitones } from '~/music/interval';
 import { useState } from 'react';
-import { TypographyH1 } from '~/components/ui/typography';
+import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
+import { GameNav } from '~/components/game/gameNav';
+import type { Result } from '~/types/game';
 
 type GameData = {
   readonly rootNote: Note;
   readonly interval: Interval;
+  readonly timeStart: number;
 };
 
 function generateData(): GameData {
   return {
     rootNote: randomNote(),
-    interval: randomInterval()
+    interval: randomInterval(),
+    timeStart: new Date().getTime()
   };
 }
 
+const ROUNDS = 10;
+
 export default function () {
   const [data, setData] = useState(generateData());
+  const [results, setResults] = useState<Result[]>([]);
+  const [counter, setCounter] = useState(0);
 
   const onNoteSelected = (note: Note): void => {
     const result = interval(data.rootNote, note);
 
-    console.log({
-      result,
-      semitones: semitones(data.interval)
-    });
-
-    if (result === semitones(data.interval) % 12) {
-      alert('OK');
-      setData(generateData());
+    const difference = semitones(data.interval);
+    if (result === difference % 12) {
+      setResults([
+        ...results,
+        {
+          result: true,
+          time: new Date().getTime() - data.timeStart
+        }
+      ]);
     } else {
-      alert('ERROR');
+      setResults([
+        ...results,
+        {
+          result: false,
+          time: new Date().getTime() - data.timeStart
+        }
+      ]);
     }
+
+    setCounter(counter + 1);
+    setData(generateData());
   };
 
   return (
-    <div>
-      <TypographyH1>
-        {data.interval} of {data.rootNote}
-      </TypographyH1>
-      <Keyboard onNoteClick={onNoteSelected} />
+    <div className="h-screen flex flex-col items-center justify-center h">
+      <GameNav />
+      <div className="grow flex flex-col gap-3 items-center justify-center">
+        <TypographyH3>
+          {counter + 1} of {ROUNDS}
+        </TypographyH3>
+        <TypographyH1>
+          <span className="text-primary">{data.interval}</span> of {data.rootNote}
+        </TypographyH1>
+      </div>
+      <div className="flex justify-center p-6">
+        <Keyboard onNoteClick={onNoteSelected} selectedNote={data.rootNote} />
+      </div>
     </div>
   );
 }

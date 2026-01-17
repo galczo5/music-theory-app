@@ -12,7 +12,7 @@ export default function () {
     <div className="flex flex-col p-6">
       <div className="flex justify-between items-center pb-6">
         <div className="flex items-center gap-3">
-          <Library size={50} />
+          <Library size={40} />
           <TypographyH1>Music Theory App</TypographyH1>
         </div>
         <div className="flex items-center gap-3">
