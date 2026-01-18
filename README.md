@@ -5,11 +5,13 @@ A focused educational tool designed for musicians to learn and train music theor
 [Open app via GitHub Pages](https://galczo5.github.io/music-theory-app/)
 
 ## Installation
+
 ```bash
 yarn install
 ```
 
 ## Development
+
 ```bash
 yarn dev
 ```
