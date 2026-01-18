@@ -7,6 +7,7 @@ import Chooser from '~/routes/chooser';
 import IntervalNames from '~/routes/interval-names-1';
 import IntervalNames2 from '~/routes/interval-names-2';
 import IntervalNames3 from '~/routes/interval-names-3';
+import Notes1 from '~/routes/notes-1';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/play" element={<Chooser />} />
+            <Route path="/play/notes-1" element={<Notes1 />} />
             <Route path="/play/interval-names-1" element={<IntervalNames />} />
             <Route path="/play/interval-names-2" element={<IntervalNames2 />} />
             <Route path="/play/interval-names-3" element={<IntervalNames3 />} />

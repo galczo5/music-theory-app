@@ -6,6 +6,10 @@ import { useTheme } from '~/themeProvider';
 export const ChooserHeader = () => {
   const { setTheme, theme } = useTheme();
 
+  const navigateToGitHub = () => {
+    window.open('https://github.com/galczo5/music-theory-app', '_blank');
+  };
+
   return (
     <div className="flex justify-between items-center pb-6">
       <div className="items-center gap-3 hidden md:flex">
@@ -20,7 +24,7 @@ export const ChooserHeader = () => {
         <Button variant="outline" onClick={() => setTheme(theme !== 'dark' ? 'dark' : 'light')}>
           {theme === 'dark' ? <Sun /> : <Moon />}
         </Button>
-        <Button variant="outline" className="hidden md:inline-flex">
+        <Button variant="outline" className="hidden md:inline-flex" onClick={navigateToGitHub}>
           <Code />
           Check out in GitHub
         </Button>

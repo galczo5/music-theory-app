@@ -2,6 +2,13 @@ import type { Game } from '~/types/game';
 
 export const GAMES: Game[] = [
   {
+    id: 'notes-1',
+    type: 'listen',
+    name: 'Notes 1',
+    description: 'Identify note name.',
+    path: '/play/notes-1'
+  },
+  {
     id: 'intervals-1',
     type: 'theory',
     name: 'Intervals 1',

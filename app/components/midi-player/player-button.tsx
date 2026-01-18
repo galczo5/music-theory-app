@@ -6,15 +6,18 @@ import { Interval } from '~/music/interval';
 import type { Chord } from '~/types/chord';
 
 type PlayerButtonProps = {
+  note?: Note;
   interval?: [Note, Interval];
   chord?: Chord;
 };
 
-export const PlayerButton = ({ interval, chord }: PlayerButtonProps) => {
+export const PlayerButton = ({ note, interval, chord }: PlayerButtonProps) => {
   const player = usePlayer();
 
   const play = () => {
-    if (interval) {
+    if (note) {
+      player.playNote(note);
+    } else if (interval) {
       player.playInterval(interval[0], interval[1]);
     } else if (chord) {
       player.playChord(chord);

@@ -32,7 +32,7 @@ function midiNoteName(n: number): string {
   const octave = octaveNumber - 1;
   const note = notesArray[n % 12] || '';
 
-  return note.includes('#') ? `${note[0]}${octave}#` : `${note[0]}${octave}`;
+  return note.includes('#') ? `${note[0]}#${octave}` : `${note[0]}${octave}`;
 }
 
 const MIDI_NOTE_NAMES: Record<number, string> = Array.from({ length: 255 }, (_, i) => i)
@@ -77,7 +77,27 @@ class Player {
   }
 
   playNote(note: Note) {
-    Player.synth1?.triggerAttackRelease(MIDI_VALUES[note], NOTE_TIME_IN_SECONDS);
+    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES[note]], NOTE_TIME_IN_SECONDS);
+  }
+
+  async testSound() {
+    const TEST_DURATION = NOTE_TIME_IN_SECONDS / 4;
+
+    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    await this.wait(TEST_DURATION * 2);
+    Player.synth2?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    await this.wait(TEST_DURATION * 2);
+    Player.synth3?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    await this.wait(TEST_DURATION * 2);
+    Player.synth4?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+
+    await this.wait(NOTE_TIME_IN_SECONDS);
+
+    for (let value of Object.values(MIDI_VALUES)) {
+      console.log('TEST SOUND', 'now playing', value, MIDI_NOTE_NAMES[value]);
+      Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[value], TEST_DURATION);
+      await this.wait(TEST_DURATION);
+    }
   }
 
   private async wait(sec: number) {
