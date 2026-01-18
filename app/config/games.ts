@@ -34,8 +34,7 @@ export const GAMES: Game[] = [
     type: 'theory',
     name: 'Chords 1',
     description: 'Construct major and minor chords.',
-    path: '/play/chords-1',
-    disabled: true
+    path: '/play/chords-1'
   },
   {
     id: 'chords-2',

@@ -18,7 +18,7 @@ export const GameResult = ({ result, onContinue }: GameResultProps) => {
         </ItemMedia>
         <ItemContent>
           <ItemTitle>
-            {result.result ? 'Correct' : 'Mistake'} {result.description}
+            {result.result ? 'Correct' : 'Mistake'} - {result.description}
           </ItemTitle>
         </ItemContent>
         <ItemActions>

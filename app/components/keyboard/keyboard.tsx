@@ -4,7 +4,7 @@ import { PlayerContext } from '~/components/midi-player/player';
 
 type KeyboardProps = {
   onNoteClick?: (note: Note) => void;
-  selectedNote?: Note;
+  selectedNote?: Note | Note[];
   play?: boolean;
 };
 
@@ -13,7 +13,9 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
   const player = useContext(PlayerContext);
 
   const noteColor = (note: Note) => {
-    if (note === selectedNote) return 'bg-primary text-white border-black';
+    const selected = Array.isArray(selectedNote) ? selectedNote : [selectedNote];
+
+    if (selected.includes(note)) return 'bg-primary text-white border-black';
     if (note.includes('#')) return 'bg-black text-white border-black hover:bg-gray-900';
     return 'bg-white text-black hover:bg-gray-100 border dark:border-black';
   };

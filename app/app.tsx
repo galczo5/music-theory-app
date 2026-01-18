@@ -8,6 +8,7 @@ import IntervalNames from '~/routes/interval-names-1';
 import IntervalNames2 from '~/routes/interval-names-2';
 import IntervalNames3 from '~/routes/interval-names-3';
 import Notes1 from '~/routes/notes-1';
+import Chords1 from '~/routes/chords-1';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/play/interval-names-1" element={<IntervalNames />} />
             <Route path="/play/interval-names-2" element={<IntervalNames2 />} />
             <Route path="/play/interval-names-3" element={<IntervalNames3 />} />
+            <Route path="/play/chords-1" element={<Chords1 />} />
           </Routes>
         </HashRouter>
       </PlayerContext.Provider>
