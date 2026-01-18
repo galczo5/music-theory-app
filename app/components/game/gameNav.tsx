@@ -8,7 +8,7 @@ export const GameNav = () => {
   const navigate = useNavigate();
   const player = usePlayer();
   return (
-    <div className="p-4 w-full flex justify-between items-center border-b border-gray-200">
+    <div className="p-4 w-full flex justify-between items-center border-b">
       <div className="gap-2 items-center hidden md:flex">
         <Library />
         <TypographyH3>Music Theory App</TypographyH3>
