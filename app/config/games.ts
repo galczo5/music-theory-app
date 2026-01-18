@@ -5,7 +5,7 @@ export const GAMES: Game[] = [
     id: 'notes-1',
     type: 'listen',
     name: 'Notes 1',
-    description: 'Identify note name.',
+    description: 'Listen to the audio and identify note names.',
     path: '/play/notes-1'
   },
   {
