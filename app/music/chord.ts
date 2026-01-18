@@ -69,9 +69,14 @@ export function chordNotes(chord: Chord): Note[] {
   const note3 = transpose(note2, chord[2]);
   result.push(note3);
 
-  if (chord.length === 4) {
-    const note3 = transpose(note2, chord[3]);
-    result.push(note3);
+  if (chord.length === 4 || chord.length === 5) {
+    const note4 = transpose(note3, chord[3]);
+    result.push(note4);
+
+    if (chord.length === 5) {
+      const note5 = transpose(note3, chord[4]);
+      result.push(note5);
+    }
   }
 
   return result;

@@ -48,23 +48,14 @@ class Player {
   private static synth2: PolySynth | null;
   private static synth3: PolySynth | null;
   private static synth4: PolySynth | null;
+  private static synth5: PolySynth | null;
 
   constructor() {
-    if (!Player.synth1) {
-      Player.synth1 = initSynth();
-    }
-
-    if (!Player.synth2) {
-      Player.synth2 = initSynth();
-    }
-
-    if (!Player.synth3) {
-      Player.synth3 = initSynth();
-    }
-
-    if (!Player.synth4) {
-      Player.synth4 = initSynth();
-    }
+    if (!Player.synth1) Player.synth1 = initSynth();
+    if (!Player.synth2) Player.synth2 = initSynth();
+    if (!Player.synth3) Player.synth3 = initSynth();
+    if (!Player.synth4) Player.synth4 = initSynth();
+    if (!Player.synth5) Player.synth5 = initSynth();
   }
 
   async playInterval(note: Note, interval: Interval): Promise<void> {
@@ -104,7 +95,7 @@ class Player {
     return new Promise((resolve) => setTimeout(resolve, sec * 1000));
   }
 
-  playChord(chord: Chord) {
+  async playChord(chord: Chord) {
     const interval1Value = semitones(chord[1]);
     const interval2Value = semitones(chord[2]);
     const rootNoteValue = MIDI_VALUES[chord[0]];
@@ -113,18 +104,32 @@ class Player {
     const note2 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value];
     const note3 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value];
     let note4 = undefined;
+    let note5 = undefined;
 
     if (chord[3]) {
       const interval3Value = semitones(chord[3]);
       note4 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value + interval3Value];
+
+      if (chord[4]) {
+        const interval4Value = semitones(chord[4]);
+        note5 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value + interval3Value + interval4Value];
+      }
     }
 
     Player.synth1?.triggerAttackRelease(note1, NOTE_TIME_IN_SECONDS);
+    await this.wait(0.1);
     Player.synth2?.triggerAttackRelease(note2, NOTE_TIME_IN_SECONDS);
+    await this.wait(0.1);
     Player.synth3?.triggerAttackRelease(note3, NOTE_TIME_IN_SECONDS);
 
     if (note4) {
+      await this.wait(0.1);
       Player.synth4?.triggerAttackRelease(note4, NOTE_TIME_IN_SECONDS);
+    }
+
+    if (note5) {
+      await this.wait(0.1);
+      Player.synth5?.triggerAttackRelease(note5, NOTE_TIME_IN_SECONDS);
     }
   }
 }

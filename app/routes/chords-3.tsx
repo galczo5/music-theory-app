@@ -88,14 +88,21 @@ export default function () {
   const onNoteSelected = (note: Note): void => {
     const newNotes = [...selectedNotes, note];
 
-    if (newNotes.length < 3) {
+    if (newNotes.length < data.chord.length) {
       setSelectedNotes(newNotes);
       return;
     }
 
     const firstIntervalCorrect = interval(newNotes[0], newNotes[1]) === semitones(data.chord[1]);
     const secondIntervalCorrect = interval(newNotes[1], newNotes[2]) === semitones(data.chord[2]);
-    const check = firstIntervalCorrect && secondIntervalCorrect;
+    const thirdIntervalCorrect = interval(newNotes[2], newNotes[3]) === semitones(data.chord[3]);
+    let forthIntervalCorrect = true;
+
+    if (data.chord.length === 5) {
+      forthIntervalCorrect = interval(newNotes[3], newNotes[4]) === semitones(data.chord[4]);
+    }
+
+    const check = firstIntervalCorrect && secondIntervalCorrect && thirdIntervalCorrect && forthIntervalCorrect;
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
