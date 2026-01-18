@@ -24,6 +24,36 @@ export function chordName(chord: Chord): string {
     }
   }
 
+  if (chord.length === 4) {
+    if (chord[1] === Interval.MajorThird && chord[2] === Interval.MinorThird && chord[3] === Interval.MajorThird) {
+      type = 'Major 7';
+    }
+
+    if (chord[1] === Interval.MinorThird && chord[2] === Interval.MajorThird && chord[3] === Interval.MinorThird) {
+      type = 'Minor 7';
+    }
+  }
+
+  if (chord.length === 5) {
+    if (
+      chord[1] === Interval.MajorThird &&
+      chord[2] === Interval.MinorThird &&
+      chord[3] === Interval.MajorThird &&
+      chord[4] === Interval.MinorThird
+    ) {
+      type = 'Major 9';
+    }
+
+    if (
+      chord[1] === Interval.MinorThird &&
+      chord[2] === Interval.MajorThird &&
+      chord[3] === Interval.MinorThird &&
+      chord[4] === Interval.MajorThird
+    ) {
+      type = 'Minor 9';
+    }
+  }
+
   return `${note} ${type}`;
 }
 
