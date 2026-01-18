@@ -9,9 +9,15 @@ export const GameNav = () => {
   const player = usePlayer();
   return (
     <div className="p-4 w-full flex justify-between items-center border-b border-gray-200">
-      <div className="flex gap-2 items-center">
+      <div className="gap-2 items-center hidden md:flex">
         <Library />
         <TypographyH3>Music Theory App</TypographyH3>
+      </div>
+      <div className="gap-2 items-center md:hidden flex">
+        <Button variant="outline">
+          <Library />
+          Music Theory App
+        </Button>
       </div>
       <div className="flex gap-2 items-center">
         <Button variant="outline" className="cursor-pointer" onClick={() => player.testSound()}>
