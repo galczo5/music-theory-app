@@ -14,6 +14,14 @@ export function chordName(chord: Chord): string {
     if (chord[1] === Interval.MinorThird && chord[2] === Interval.MajorThird) {
       type = 'Minor';
     }
+
+    if (chord[1] === Interval.MajorThird && chord[2] === Interval.MajorThird) {
+      type = 'Augmented';
+    }
+
+    if (chord[1] === Interval.MinorThird && chord[2] === Interval.MinorThird) {
+      type = 'Diminished';
+    }
   }
 
   return `${note} ${type}`;
