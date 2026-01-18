@@ -4,7 +4,7 @@ import { player, PlayerContext } from '~/components/midi-player/player';
 import { HashRouter, Route, Routes } from 'react-router';
 import Home from '~/routes/home';
 import Chooser from '~/routes/chooser';
-import IntervalNames from '~/routes/interval-names';
+import IntervalNames from '~/routes/interval-names-1';
 import IntervalNames2 from '~/routes/interval-names-2';
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/play" element={<Chooser />} />
-            <Route path="/play/interval-names" element={<IntervalNames />} />
+            <Route path="/play/interval-names-1" element={<IntervalNames />} />
             <Route path="/play/interval-names-2" element={<IntervalNames2 />} />
           </Routes>
         </HashRouter>
