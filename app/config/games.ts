@@ -20,8 +20,7 @@ export const GAMES: Game[] = [
     type: 'listen',
     name: 'Interval 3',
     description: 'Listen to the audio and identify the interval played.',
-    path: '/play/interval-names-3',
-    disabled: true
+    path: '/play/interval-names-3'
   },
   {
     id: 'chords-1',
