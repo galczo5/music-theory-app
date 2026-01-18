@@ -10,6 +10,7 @@ export default function () {
       <Tabs defaultValue="games">
         <TabsList>
           <TabsTrigger value="games">Games</TabsTrigger>
+          <TabsTrigger value="handbook">Handbook</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="games">
