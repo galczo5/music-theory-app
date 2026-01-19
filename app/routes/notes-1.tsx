@@ -1,13 +1,15 @@
 import { Keyboard } from '~/components/keyboard/keyboard';
 import { type Note, randomNote } from '~/music/notes';
 import { useState } from 'react';
-import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
-import { GameNav } from '~/components/game/gameNav';
+import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
 import { PlayerButton } from '~/components/midi-player/player-button';
+import { Game } from '~/components/game/game';
+import { GameContent } from '~/components/game/gameContent';
+import { GameFooter } from '~/components/game/gameFooter';
 
 type GameData = {
   readonly rootNote: Note;
@@ -62,18 +64,15 @@ export default function () {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
-      <GameNav />
-      <div className="grow flex flex-col gap-3 items-center justify-center">
+    <Game>
+      <GameContent>
         {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
         {!gameEnd && !timer && !result && (
           <>
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH1>
-              <TypographyH1>Listen and select the right note</TypographyH1>
-            </TypographyH1>
+            <TypographyH2>Listen and select the right note</TypographyH2>
             <div className="mt-3">
               <PlayerButton note={data.rootNote} />
             </div>
@@ -81,12 +80,12 @@ export default function () {
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
-      </div>
-      {!gameEnd && !timer && !result && (
-        <div className="flex flex-col items-center justify-center p-6">
-          <Keyboard onNoteClick={onNoteSelected} play={true} />
-        </div>
+      </GameContent>
+      {!gameEnd && !result && (
+        <GameFooter>
+          <Keyboard onNoteClick={onNoteSelected} disabled={timer} play={true} />
+        </GameFooter>
       )}
-    </div>
+    </Game>
   );
 }

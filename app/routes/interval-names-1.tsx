@@ -3,12 +3,14 @@ import { interval, type Note, randomNote } from '~/music/notes';
 import { type Interval, randomInterval, semitones, transpose } from '~/music/interval';
 import { useState } from 'react';
 import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
-import { GameNav } from '~/components/game/gameNav';
 import type { Result } from '~/types/game';
 import { GameHint } from '~/components/game/gameHint';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
+import { Game } from '~/components/game/game';
+import { GameContent } from '~/components/game/gameContent';
+import { GameFooter } from '~/components/game/gameFooter';
 
 type GameData = {
   readonly rootNote: Note;
@@ -68,9 +70,8 @@ export default function () {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center h">
-      <GameNav />
-      <div className="grow flex flex-col gap-3 items-center justify-center">
+    <Game>
+      <GameContent>
         {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
         {!gameEnd && !timer && !result && (
           <>
@@ -84,13 +85,13 @@ export default function () {
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
-      </div>
-      {!gameEnd && !timer && !result && (
-        <div className="flex flex-col items-center justify-center p-6">
+      </GameContent>
+      {!gameEnd && !result && (
+        <GameFooter>
           <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
-          <Keyboard onNoteClick={onNoteSelected} selectedNote={data.rootNote} play={true} />
-        </div>
+          <Keyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={data.rootNote} play={true} />
+        </GameFooter>
       )}
-    </div>
+    </Game>
   );
 }

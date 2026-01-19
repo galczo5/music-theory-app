@@ -2,7 +2,7 @@ import { Interval, transpose } from '~/music/interval';
 import type { Chord } from '~/types/chord';
 import type { Note } from '~/music/notes';
 
-export function chordName(chord: Chord): string {
+export function chordName(chord: Chord, format?: 'note' | 'type' | undefined): string {
   const note = chord[0];
   let type = '';
 
@@ -53,6 +53,9 @@ export function chordName(chord: Chord): string {
       type = 'Minor 9';
     }
   }
+
+  if (format === 'type') return type;
+  if (format === 'note') return note;
 
   return `${note} ${type}`;
 }

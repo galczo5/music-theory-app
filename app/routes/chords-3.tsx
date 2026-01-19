@@ -2,8 +2,7 @@ import { Keyboard } from '~/components/keyboard/keyboard';
 import { interval, type Note, randomNote } from '~/music/notes';
 import { Interval, semitones } from '~/music/interval';
 import { useState } from 'react';
-import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
-import { GameNav } from '~/components/game/gameNav';
+import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
@@ -11,6 +10,9 @@ import { GameSummary } from '~/components/game/gameSummary';
 import type { Major7Chord, Major9Chord, Minor7Chord, Minor9Chord } from '~/types/chord';
 import { GameChord } from '~/components/game/gameChord';
 import { chordName, chordNotes } from '~/music/chord';
+import { Game } from '~/components/game/game';
+import { GameContent } from '~/components/game/gameContent';
+import { GameFooter } from '~/components/game/gameFooter';
 
 type GameDataMajor7Chord = {
   readonly type: 'major7';
@@ -133,27 +135,26 @@ export default function () {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center h">
-      <GameNav />
-      <div className="grow flex flex-col gap-3 items-center justify-center">
+    <Game>
+      <GameContent>
         {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
         {!gameEnd && !timer && !result && (
           <>
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH1>Construct the chord</TypographyH1>
+            <TypographyH2>Construct the chord</TypographyH2>
             <GameChord chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
-      </div>
-      {!gameEnd && !timer && !result && (
-        <div className="flex flex-col items-center justify-center p-6">
-          <Keyboard onNoteClick={onNoteSelected} selectedNote={selectedNotes} play={true} />
-        </div>
+      </GameContent>
+      {!gameEnd && !result && (
+        <GameFooter>
+          <Keyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={selectedNotes} play={true} />
+        </GameFooter>
       )}
-    </div>
+    </Game>
   );
 }

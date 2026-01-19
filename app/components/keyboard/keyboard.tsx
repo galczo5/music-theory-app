@@ -6,9 +6,10 @@ type KeyboardProps = {
   onNoteClick?: (note: Note) => void;
   selectedNote?: Note | Note[];
   play?: boolean;
+  disabled?: boolean;
 };
 
-export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => {
+export const Keyboard = ({ onNoteClick, selectedNote, play, disabled }: KeyboardProps) => {
   const notes = notesArray.filter((x) => !x.includes('#'));
   const player = useContext(PlayerContext);
 
@@ -17,6 +18,7 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
 
     if (selected.includes(note)) return 'bg-primary text-white border-black';
     if (note.includes('#')) return 'bg-black text-white border-black hover:bg-gray-900';
+
     return 'bg-white text-black hover:bg-gray-100 border dark:border-black';
   };
 
@@ -28,8 +30,10 @@ export const Keyboard = ({ onNoteClick, selectedNote, play }: KeyboardProps) => 
     onNoteClick && onNoteClick(note);
   };
 
+  const disabledStyle = disabled ? 'select-none opacity-20' : '';
+
   return (
-    <div className="relative w-84 h-40 text-xs">
+    <div className={disabledStyle + ' relative w-84 h-40 text-xs'}>
       {/* White keys */}
       <div className="flex absolute top-0 left-0">
         {notes.map((x) => (
