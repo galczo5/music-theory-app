@@ -20,7 +20,7 @@ export const GameTimer = ({ seconds, onTimeout }: TimerProps) => {
       setCount((x) => {
         if (x === 0) {
           clearInterval(interval);
-          onTimeout();
+          setTimeout(() => onTimeout(), 0);
           return 0;
         }
 

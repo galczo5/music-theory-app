@@ -41,6 +41,7 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
       <div className="flex absolute top-0 left-0">
         {notes.map((x) => (
           <div
+            key={x}
             onClick={() => playNote(x)}
             className={noteColor(x) + ' pb-4 w-12 h-40 flex items-end justify-center cursor-pointer'}
           >
@@ -58,6 +59,7 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
           if (isSharp) {
             return (
               <div
+                key={x}
                 onClick={() => playNote(x)}
                 className={
                   noteColor(x) + ' rounded-b shadow pb-2 w-6 h-24 flex items-end justify-center cursor-pointer'
@@ -69,10 +71,10 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
           }
 
           if (isNextSharp) {
-            return <div className="pb-4 w-6"></div>;
+            return <div key={x} className="pb-4 w-6"></div>;
           }
 
-          return <div className="pb-4 w-12"></div>;
+          return <div key={x} className="pb-4 w-12"></div>;
         })}
       </div>
     </div>

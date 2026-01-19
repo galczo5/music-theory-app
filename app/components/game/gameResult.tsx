@@ -1,7 +1,7 @@
 import type { Result } from '~/types/game';
 import { Button } from '~/components/ui/button';
-import { ArrowRight, Flame, HeartCrack } from 'lucide-react';
-import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from '~/components/ui/item';
+import { ArrowRight } from 'lucide-react';
+import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
 
 type GameResultProps = {
   result: Result;
@@ -10,24 +10,13 @@ type GameResultProps = {
 
 export const GameResult = ({ result, onContinue }: GameResultProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 p-4">
-      <Item variant="outline">
-        <ItemMedia variant="icon">
-          {result.result && <Flame />}
-          {!result.result && <HeartCrack />}
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle>
-            {result.result ? 'Correct' : 'Mistake'} - {result.description}
-          </ItemTitle>
-        </ItemContent>
-        <ItemActions>
-          <Button variant="outline" onClick={onContinue}>
-            Continue
-            <ArrowRight />
-          </Button>
-        </ItemActions>
-      </Item>
+    <div className="flex flex-col items-center justify-center gap-3 p-4 text-center">
+      <TypographyH1>{result.result ? 'Correct' : 'Mistake'}</TypographyH1>
+      {result.description && <TypographyH3>{result.description}</TypographyH3>}
+      <Button variant="outline" className="mt-3" onClick={onContinue}>
+        Continue
+        <ArrowRight />
+      </Button>
     </div>
   );
 };
