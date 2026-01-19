@@ -6,71 +6,41 @@ import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { Chord, Major7Chord, Major9Chord, Minor7Chord, Minor9Chord } from '~/types/chord';
+import type { AugmentedChord, Chord, DiminishedChord } from '~/types/chord';
 import { chordName, compareChords } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
-import { PlayerButton } from '~/components/midi-player/player-button';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { GameChordNotes } from '~/components/game/gameChordNotes';
 
-type GameDataMajor7Chord = {
-  readonly type: 'major7';
-  readonly chord: Major7Chord;
+type GameDataAugmentedChord = {
+  readonly type: 'augmented';
+  readonly chord: AugmentedChord;
   readonly timeStart: number;
 };
 
-type GameDataMinor7Chord = {
-  readonly type: 'minor7';
-  readonly chord: Minor7Chord;
+type GameDataMinorDiminishedChord = {
+  readonly type: 'diminished';
+  readonly chord: DiminishedChord;
   readonly timeStart: number;
 };
 
-type GameDataMajor9Chord = {
-  readonly type: 'major9';
-  readonly chord: Major9Chord;
-  readonly timeStart: number;
-};
-
-type GameDataMinor9Chord = {
-  readonly type: 'minor9';
-  readonly chord: Minor9Chord;
-  readonly timeStart: number;
-};
-
-type GameData = GameDataMajor7Chord | GameDataMinor7Chord | GameDataMajor9Chord | GameDataMinor9Chord;
+type GameData = GameDataAugmentedChord | GameDataMinorDiminishedChord;
 
 function generateData(): GameData {
-  const type1 = Math.random() < 0.5 ? 'major7' : 'minor7';
-  const type2 = Math.random() < 0.5 ? 'major9' : 'minor9';
-  const type = Math.random() < 0.5 ? type1 : type2;
+  const type = Math.random() < 0.5 ? 'diminished' : 'augmented';
 
-  if (type === 'major7') {
+  if (type === 'diminished') {
     return {
-      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird, Interval.MajorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
-
-  if (type === 'minor7') {
-    return {
-      chord: [randomNote(), Interval.MinorThird, Interval.MajorThird, Interval.MinorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
-
-  if (type === 'major9') {
-    return {
-      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird],
+      chord: [randomNote(), Interval.MinorThird, Interval.MinorThird],
       type,
       timeStart: new Date().getTime()
     };
   }
 
   return {
-    chord: [randomNote(), Interval.MinorThird, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird],
+    chord: [randomNote(), Interval.MajorThird, Interval.MajorThird],
     type,
     timeStart: new Date().getTime()
   };
@@ -125,8 +95,8 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Listen to the chord</TypographyH2>
-            <PlayerButton chord={data.chord} />
+            <TypographyH2>Name the chord</TypographyH2>
+            <GameChordNotes chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
@@ -134,7 +104,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <ChordKeyboard onSelect={onChordSelected} types={['Major 7', 'Minor 7', 'Major 9', 'Minor 9']} />
+          <ChordKeyboard onSelect={onChordSelected} types={['Augmented', 'Diminished']} />
         </GameFooter>
       )}
     </Game>

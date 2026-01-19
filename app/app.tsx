@@ -14,6 +14,9 @@ import Chords3 from '~/routes/chords-3';
 import Chords4 from '~/routes/chords-4';
 import Chords5 from '~/routes/chords-5';
 import Chords6 from '~/routes/chords-6';
+import Chords7 from '~/routes/chords-7';
+import Chords8 from '~/routes/chords-8';
+import Chords9 from '~/routes/chords-9';
 
 export default function App() {
   return (
@@ -33,6 +36,9 @@ export default function App() {
             <Route path="/play/chords-4" element={<Chords4 />} />
             <Route path="/play/chords-5" element={<Chords5 />} />
             <Route path="/play/chords-6" element={<Chords6 />} />
+            <Route path="/play/chords-7" element={<Chords7 />} />
+            <Route path="/play/chords-8" element={<Chords8 />} />
+            <Route path="/play/chords-9" element={<Chords9 />} />
           </Routes>
         </HashRouter>
       </PlayerContext.Provider>

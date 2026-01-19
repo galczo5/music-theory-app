@@ -11,8 +11,8 @@ import { chordName, compareChords } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
-import { PlayerButton } from '~/components/midi-player/player-button';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { GameChordNotes } from '~/components/game/gameChordNotes';
 
 type GameDataMajor7Chord = {
   readonly type: 'major7';
@@ -125,8 +125,8 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Listen to the chord</TypographyH2>
-            <PlayerButton chord={data.chord} />
+            <TypographyH2>Name the chord</TypographyH2>
+            <GameChordNotes chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}

@@ -76,24 +76,21 @@ export const GAMES: Game[] = [
     type: 'theory',
     name: 'Chords 7',
     description: 'Identify the correct major or minor chord name based on the provided notes.',
-    path: '/play/chords-7',
-    disabled: true
+    path: '/play/chords-7'
   },
   {
     id: 'chords-8',
     type: 'theory',
     name: 'Chords 8',
     description: 'Identify the correct diminished or augmented chord name based on the provided notes.',
-    path: '/play/chords-8',
-    disabled: true
+    path: '/play/chords-8'
   },
   {
     id: 'chords-9',
     type: 'theory',
     name: 'Chords 9',
     description: 'Identify the correct seventh or ninth chord name based on the provided notes.',
-    path: '/play/chords-9',
-    disabled: true
+    path: '/play/chords-9'
   },
   {
     id: 'scales-1',
