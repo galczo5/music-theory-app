@@ -69,8 +69,7 @@ export const GAMES: Game[] = [
     type: 'listen',
     name: 'Chords 6',
     description: 'Listen to the audio and identify seventh and ninth chords.',
-    path: '/play/chords-6',
-    disabled: true
+    path: '/play/chords-6'
   },
   {
     id: 'scales-1',
