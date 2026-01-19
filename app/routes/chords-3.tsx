@@ -1,4 +1,4 @@
-import { Keyboard } from '~/components/keyboard/keyboard';
+import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
 import { interval, type Note, randomNote } from '~/music/notes';
 import { Interval, semitones } from '~/music/interval';
 import { useState } from 'react';
@@ -152,7 +152,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <Keyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={selectedNotes} play={true} />
+          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={selectedNotes} play={true} />
         </GameFooter>
       )}
     </Game>

@@ -55,16 +55,14 @@ export const GAMES: Game[] = [
     type: 'listen',
     name: 'Chords 4',
     description: 'Listen to the audio and identify major and minor chords.',
-    path: '/play/chords-4',
-    disabled: true
+    path: '/play/chords-4'
   },
   {
     id: 'chords-5',
     type: 'listen',
     name: 'Chords 5',
     description: 'Listen to the audio and identify diminished and augmented chords.',
-    path: '/play/chords-5',
-    disabled: true
+    path: '/play/chords-5'
   },
   {
     id: 'chords-6',

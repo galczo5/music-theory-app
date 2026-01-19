@@ -1,4 +1,4 @@
-import { Keyboard } from '~/components/keyboard/keyboard';
+import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
 import { interval, type Note, randomNote } from '~/music/notes';
 import { type Interval, randomInterval, semitones, transpose } from '~/music/interval';
 import { useState } from 'react';
@@ -89,7 +89,7 @@ export default function () {
       {!gameEnd && !result && (
         <GameFooter>
           <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
-          <Keyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={data.rootNote} play={true} />
+          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={data.rootNote} play={true} />
         </GameFooter>
       )}
     </Game>

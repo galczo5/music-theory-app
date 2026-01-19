@@ -1,28 +1,47 @@
-import { type Note, randomNote } from '~/music/notes';
-import { type Interval, randomInterval, semitones } from '~/music/interval';
+import { randomNote } from '~/music/notes';
+import { Interval } from '~/music/interval';
 import { useState } from 'react';
-import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
+import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
-import { GameHint } from '~/components/game/gameHint';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import { PlayerButton } from '~/components/midi-player/player-button';
-import { IntervalsKeyboard } from '~/components/keyboard/intervals-keyboard';
+import type { Chord, MajorChord, MinorChord } from '~/types/chord';
+import { chordName, compareChords } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
+import { PlayerButton } from '~/components/midi-player/player-button';
+import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
 
-type GameData = {
-  readonly rootNote: Note;
-  readonly interval: Interval;
+type GameDataMajorChord = {
+  readonly type: 'major';
+  readonly chord: MajorChord;
   readonly timeStart: number;
 };
 
+type GameDataMinorChord = {
+  readonly type: 'minor';
+  readonly chord: MinorChord;
+  readonly timeStart: number;
+};
+
+type GameData = GameDataMinorChord | GameDataMajorChord;
+
 function generateData(): GameData {
+  const type = Math.random() < 0.5 ? 'major' : 'minor';
+
+  if (type === 'major') {
+    return {
+      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird],
+      type,
+      timeStart: new Date().getTime()
+    };
+  }
+
   return {
-    rootNote: randomNote(),
-    interval: randomInterval(),
+    chord: [randomNote(), Interval.MinorThird, Interval.MajorThird],
+    type,
     timeStart: new Date().getTime()
   };
 }
@@ -37,15 +56,14 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onIntervalSelected = (interval: Interval): void => {
-    const difference = semitones(data.interval);
-    const check = interval === data.interval;
+  const onChordSelected = (chord: Chord): void => {
+    const check = compareChords(chord, data.chord);
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `${interval} is difference of ${difference} semitones.`
-        : `${data.interval} is difference of ${difference} semitones. Your answer was ${interval} - ${semitones(interval)} semitones.`
+        ? `It is ${chordName(data.chord)}`
+        : `Correct answer is ${chordName(data.chord)}, not ${chordName(chord)}.`
     };
 
     setResults([...results, currentResult]);
@@ -77,19 +95,16 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH1>Listen to two notes and name the interval</TypographyH1>
-            <div className="mt-3">
-              <PlayerButton interval={[data.rootNote, data.interval]} />
-            </div>
+            <TypographyH2>Listen to the chord</TypographyH2>
+            <PlayerButton chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
       </GameContent>
-      {!gameEnd && !timer && !result && (
+      {!gameEnd && !result && (
         <GameFooter>
-          <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
-          <IntervalsKeyboard onIntervalClick={onIntervalSelected} />
+          <ChordKeyboard onSelect={onChordSelected} types={['Major', 'Minor']} />
         </GameFooter>
       )}
     </Game>

@@ -1,12 +1,12 @@
 import { type Interval, intervalArray } from '~/music/interval';
 import { Button } from '~/components/ui/button';
 
-type IntervalsSelectorProps = {
+type IntervalsKeyboardProps = {
   onIntervalClick: (interval: Interval) => void;
   randomize?: boolean;
 };
 
-export const IntervalsSelector = ({ onIntervalClick, randomize }: IntervalsSelectorProps) => {
+export const IntervalsKeyboard = ({ onIntervalClick, randomize }: IntervalsKeyboardProps) => {
   const randomArray = [...intervalArray];
 
   if (randomize) {

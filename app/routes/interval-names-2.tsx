@@ -5,7 +5,7 @@ import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import { IntervalsSelector } from '~/components/keyboard/intervals-selector';
+import { IntervalsKeyboard } from '~/components/keyboard/intervals-keyboard';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
@@ -82,7 +82,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !timer && !result && (
         <GameFooter>
-          <IntervalsSelector onIntervalClick={onIntervalSelected} randomize={true} />
+          <IntervalsKeyboard onIntervalClick={onIntervalSelected} randomize={true} />
         </GameFooter>
       )}
     </Game>

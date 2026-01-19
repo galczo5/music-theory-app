@@ -1,10 +1,22 @@
 import { Interval, transpose } from '~/music/interval';
-import type { Chord } from '~/types/chord';
+import type {
+  AugmentedChord,
+  Chord,
+  DiminishedChord,
+  Major7Chord,
+  Major9Chord,
+  MajorChord,
+  Minor7Chord,
+  Minor9Chord,
+  MinorChord
+} from '~/types/chord';
 import type { Note } from '~/music/notes';
+
+export type ChordType = 'Major' | 'Minor' | 'Augmented' | 'Diminished' | 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
 
 export function chordName(chord: Chord, format?: 'note' | 'type' | undefined): string {
   const note = chord[0];
-  let type = '';
+  let type: ChordType | undefined;
 
   if (chord.length === 3) {
     if (chord[1] === Interval.MajorThird && chord[2] === Interval.MinorThird) {
@@ -54,7 +66,7 @@ export function chordName(chord: Chord, format?: 'note' | 'type' | undefined): s
     }
   }
 
-  if (format === 'type') return type;
+  if (format === 'type') return type || '';
   if (format === 'note') return note;
 
   return `${note} ${type}`;
@@ -83,4 +95,39 @@ export function chordNotes(chord: Chord): Note[] {
   }
 
   return result;
+}
+
+export const getChord = (note: Note, type: ChordType) => {
+  switch (type) {
+    case 'Major':
+      return [note, Interval.MajorThird, Interval.MinorThird] as MajorChord;
+    case 'Minor':
+      return [note, Interval.MinorThird, Interval.MajorThird] as MinorChord;
+    case 'Augmented':
+      return [note, Interval.MajorThird, Interval.MajorThird] as AugmentedChord;
+    case 'Diminished':
+      return [note, Interval.MinorThird, Interval.MinorThird] as DiminishedChord;
+    case 'Major 7':
+      return [note, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird] as Major7Chord;
+    case 'Minor 7':
+      return [note, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird] as Minor7Chord;
+    case 'Major 9':
+      return [note, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird] as Major9Chord;
+    case 'Minor 9':
+      return [note, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird] as Minor9Chord;
+  }
+};
+
+export function compareChords(chord1: Chord, chord2: Chord): boolean {
+  if (chord1.length !== chord2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < chord1.length; i++) {
+    if (chord1.at(i) !== chord2.at(i)) {
+      return false;
+    }
+  }
+
+  return true;
 }

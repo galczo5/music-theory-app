@@ -2,7 +2,7 @@ import { TypographyH1, TypographyP } from '~/components/ui/typography';
 import { Button } from '~/components/ui/button';
 import { AlertCircleIcon, ArrowRight, Code, Library } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { Keyboard } from '~/components/keyboard/keyboard';
+import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
 import { Separator } from '~/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 
@@ -45,7 +45,7 @@ export default function Home() {
         <Separator />
       </div>
 
-      <Keyboard play={true} />
+      <PianoKeyboard play={true} />
     </div>
   );
 }

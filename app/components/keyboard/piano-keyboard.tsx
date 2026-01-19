@@ -9,7 +9,7 @@ type KeyboardProps = {
   disabled?: boolean;
 };
 
-export const Keyboard = ({ onNoteClick, selectedNote, play, disabled }: KeyboardProps) => {
+export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: KeyboardProps) => {
   const notes = notesArray.filter((x) => !x.includes('#'));
   const player = useContext(PlayerContext);
 
