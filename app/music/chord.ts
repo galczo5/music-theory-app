@@ -1,4 +1,4 @@
-import { Interval, transpose } from '~/music/interval';
+import { Interval, intervalArray, transpose } from '~/music/interval';
 import type {
   AugmentedChord,
   Chord,
@@ -10,7 +10,7 @@ import type {
   Minor9Chord,
   MinorChord
 } from '~/types/chord';
-import type { Note } from '~/music/notes';
+import { interval, type Note } from '~/music/notes';
 
 export type ChordType = 'Major' | 'Minor' | 'Augmented' | 'Diminished' | 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
 
@@ -97,7 +97,35 @@ export function chordNotes(chord: Chord): Note[] {
   return result;
 }
 
-export const getChord = (note: Note, type: ChordType) => {
+export function chordFromNotes(notes: Note[]): Chord {
+  if (notes.length < 3) {
+    throw new Error('Not a chord');
+  }
+
+  const interval1 = interval(notes[0], notes[1]);
+  const interval2 = interval(notes[1], notes[2]);
+
+  if (notes.length === 5) {
+    const interval3 = interval(notes[2], notes[3]);
+    const interval4 = interval(notes[3], notes[4]);
+    return [
+      notes[0],
+      intervalArray[interval1],
+      intervalArray[interval2],
+      intervalArray[interval3],
+      intervalArray[interval4]
+    ];
+  }
+
+  if (notes.length === 4) {
+    const interval3 = interval(notes[2], notes[3]);
+    return [notes[0], intervalArray[interval1], intervalArray[interval2], intervalArray[interval3]];
+  }
+
+  return [notes[0], intervalArray[interval1], intervalArray[interval2]];
+}
+
+export function getChord(note: Note, type: ChordType): Chord {
   switch (type) {
     case 'Major':
       return [note, Interval.MajorThird, Interval.MinorThird] as MajorChord;
@@ -116,7 +144,7 @@ export const getChord = (note: Note, type: ChordType) => {
     case 'Minor 9':
       return [note, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird] as Minor9Chord;
   }
-};
+}
 
 export function compareChords(chord1: Chord, chord2: Chord): boolean {
   if (chord1.length !== chord2.length) {

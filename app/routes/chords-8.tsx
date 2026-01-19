@@ -1,46 +1,29 @@
 import { randomNote } from '~/music/notes';
-import { Interval } from '~/music/interval';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { AugmentedChord, Chord, DiminishedChord } from '~/types/chord';
-import { chordName, compareChords } from '~/music/chord';
+import type { Chord } from '~/types/chord';
+import { chordName, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
 import { GameChordNotes } from '~/components/game/gameChordNotes';
 
-type GameDataAugmentedChord = {
-  readonly type: 'augmented';
-  readonly chord: AugmentedChord;
+type GameData = {
+  readonly type: 'Diminished' | 'Augmented';
+  readonly chord: Chord;
   readonly timeStart: number;
 };
-
-type GameDataMinorDiminishedChord = {
-  readonly type: 'diminished';
-  readonly chord: DiminishedChord;
-  readonly timeStart: number;
-};
-
-type GameData = GameDataAugmentedChord | GameDataMinorDiminishedChord;
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'diminished' : 'augmented';
-
-  if (type === 'diminished') {
-    return {
-      chord: [randomNote(), Interval.MinorThird, Interval.MinorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
+  const type = Math.random() < 0.5 ? 'Diminished' : 'Augmented';
 
   return {
-    chord: [randomNote(), Interval.MajorThird, Interval.MajorThird],
+    chord: getChord(randomNote(), type),
     type,
     timeStart: new Date().getTime()
   };

@@ -1,46 +1,29 @@
 import { randomNote } from '~/music/notes';
-import { Interval } from '~/music/interval';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { Chord, MajorChord, MinorChord } from '~/types/chord';
-import { chordName, compareChords } from '~/music/chord';
+import type { Chord } from '~/types/chord';
+import { chordName, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
 import { GameChordNotes } from '~/components/game/gameChordNotes';
 
-type GameDataMajorChord = {
-  readonly type: 'major';
-  readonly chord: MajorChord;
+type GameData = {
+  readonly type: 'Major' | 'Minor';
+  readonly chord: Chord;
   readonly timeStart: number;
 };
-
-type GameDataMinorChord = {
-  readonly type: 'minor';
-  readonly chord: MinorChord;
-  readonly timeStart: number;
-};
-
-type GameData = GameDataMinorChord | GameDataMajorChord;
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'major' : 'minor';
-
-  if (type === 'major') {
-    return {
-      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
+  const type = Math.random() < 0.5 ? 'Major' : 'Minor';
 
   return {
-    chord: [randomNote(), Interval.MinorThird, Interval.MajorThird],
+    chord: getChord(randomNote(), type),
     type,
     timeStart: new Date().getTime()
   };

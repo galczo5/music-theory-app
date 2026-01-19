@@ -1,76 +1,31 @@
 import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
-import { interval, type Note, randomNote } from '~/music/notes';
-import { Interval, semitones } from '~/music/interval';
+import { type Note, randomNote } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { Major7Chord, Major9Chord, Minor7Chord, Minor9Chord } from '~/types/chord';
+import type { Chord } from '~/types/chord';
 import { GameChord } from '~/components/game/gameChord';
-import { chordName, chordNotes } from '~/music/chord';
+import { chordFromNotes, chordName, chordNotes, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
 
-type GameDataMajor7Chord = {
-  readonly type: 'major7';
-  readonly chord: Major7Chord;
+type GameData = {
+  readonly type: 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
+  readonly chord: Chord;
   readonly timeStart: number;
 };
-
-type GameDataMinor7Chord = {
-  readonly type: 'minor7';
-  readonly chord: Minor7Chord;
-  readonly timeStart: number;
-};
-
-type GameDataMajor9Chord = {
-  readonly type: 'major9';
-  readonly chord: Major9Chord;
-  readonly timeStart: number;
-};
-
-type GameDataMinor9Chord = {
-  readonly type: 'minor9';
-  readonly chord: Minor9Chord;
-  readonly timeStart: number;
-};
-
-type GameData = GameDataMajor7Chord | GameDataMinor7Chord | GameDataMajor9Chord | GameDataMinor9Chord;
 
 function generateData(): GameData {
-  const type1 = Math.random() < 0.5 ? 'major7' : 'minor7';
-  const type2 = Math.random() < 0.5 ? 'major9' : 'minor9';
+  const type1 = Math.random() < 0.5 ? 'Major 7' : 'Minor 7';
+  const type2 = Math.random() < 0.5 ? 'Major 9' : 'Minor 9';
   const type = Math.random() < 0.5 ? type1 : type2;
 
-  if (type === 'major7') {
-    return {
-      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird, Interval.MajorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
-
-  if (type === 'minor7') {
-    return {
-      chord: [randomNote(), Interval.MinorThird, Interval.MajorThird, Interval.MinorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
-
-  if (type === 'major9') {
-    return {
-      chord: [randomNote(), Interval.MajorThird, Interval.MinorThird, Interval.MajorThird, Interval.MinorThird],
-      type,
-      timeStart: new Date().getTime()
-    };
-  }
-
   return {
-    chord: [randomNote(), Interval.MinorThird, Interval.MajorThird, Interval.MinorThird, Interval.MajorThird],
+    chord: getChord(randomNote(), type),
     type,
     timeStart: new Date().getTime()
   };
@@ -95,16 +50,7 @@ export default function () {
       return;
     }
 
-    const firstIntervalCorrect = interval(newNotes[0], newNotes[1]) === semitones(data.chord[1]);
-    const secondIntervalCorrect = interval(newNotes[1], newNotes[2]) === semitones(data.chord[2]);
-    const thirdIntervalCorrect = interval(newNotes[2], newNotes[3]) === semitones(data.chord[3]);
-    let forthIntervalCorrect = true;
-
-    if (data.chord.length === 5) {
-      forthIntervalCorrect = interval(newNotes[3], newNotes[4]) === semitones(data.chord[4]);
-    }
-
-    const check = firstIntervalCorrect && secondIntervalCorrect && thirdIntervalCorrect && forthIntervalCorrect;
+    const check = compareChords(data.chord, chordFromNotes(newNotes));
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
