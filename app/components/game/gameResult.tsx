@@ -10,7 +10,7 @@ type GameResultProps = {
 
 export const GameResult = ({ result, onContinue }: GameResultProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-3">
+    <div className="flex flex-col items-center justify-center gap-3 p-4">
       <Item variant="outline">
         <ItemMedia variant="icon">
           {result.result && <Flame />}

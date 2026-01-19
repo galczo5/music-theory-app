@@ -62,7 +62,7 @@ export default function () {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center h">
+    <div className="h-screen flex flex-col items-center justify-center">
       <GameNav />
       <div className="grow flex flex-col gap-3 items-center justify-center">
         {timer && <GameTimer seconds={5} onTimeout={timerEnd} />}
