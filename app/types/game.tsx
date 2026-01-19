@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { Hammer, Music, Speaker } from 'lucide-react';
+import { Ear, Hammer, Music } from 'lucide-react';
 
 export type GameType = 'theory' | 'listen';
 
@@ -19,7 +19,7 @@ export function getGameIcon(game: Game): ReactElement {
 
   switch (game.type) {
     case 'listen':
-      return <Speaker size={20} />;
+      return <Ear size={20} />;
     default:
       return <Music size={20} />;
   }
