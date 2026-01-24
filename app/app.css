@@ -138,3 +138,35 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.reset-tw,
+.reset-tw * {
+  all: revert !important;
+}
+
+.markdown {
+  h2:nth-child(1) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid var(--border) !important;
+  }
+
+  th,
+  td {
+    text-align: left !important;
+    padding: 4px 6px !important;
+  }
+
+  table {
+    border-collapse: collapse !important;
+  }
+
+  hr {
+    border: 1px solid var(--border) !important;
+  }
+}

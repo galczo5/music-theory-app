@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { GamesList } from '~/components/chooser/gamesList';
 import { GAMES } from '~/config/games';
 import { ChooserHeader } from '~/components/chooser/chooserHeader';
+import { Handbook } from '~/components/handbook/handbook';
 
 export default function () {
   return (
@@ -15,6 +16,9 @@ export default function () {
         </TabsList>
         <TabsContent value="games">
           <GamesList games={GAMES} />
+        </TabsContent>
+        <TabsContent value="handbook">
+          <Handbook />
         </TabsContent>
         <TabsContent value="settigns"></TabsContent>
       </Tabs>
