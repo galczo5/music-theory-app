@@ -9,7 +9,7 @@ export const GamesList = ({ games }: GameListProps) => {
   return (
     <div className="xl:container xs:max-w-full grid sm:grid-cols-1 md:grid-cols-2 gap-2">
       {games.map((g) => (
-        <GameCard game={g} />
+        <GameCard key={g.id} game={g} />
       ))}
     </div>
   );

@@ -10,8 +10,10 @@ import { chordName, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
-import { PlayerButton } from '~/components/midi-player/player-button';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { GameChordNotes } from '~/components/game/gameChordNotes';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
   readonly type: 'Diminished' | 'Augmented';
@@ -29,7 +31,7 @@ function generateData(): GameData {
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -78,8 +80,8 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Listen to the chord</TypographyH2>
-            <PlayerButton chord={data.chord} />
+            <TypographyH2>Name the chord</TypographyH2>
+            <GameChordNotes chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}

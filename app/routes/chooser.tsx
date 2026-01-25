@@ -3,6 +3,7 @@ import { GamesList } from '~/components/chooser/gamesList';
 import { GAMES } from '~/config/games';
 import { ChooserHeader } from '~/components/chooser/chooserHeader';
 import { Handbook } from '~/components/handbook/handbook';
+import { Settings } from '~/components/settings/settings';
 
 export default function () {
   return (
@@ -20,7 +21,9 @@ export default function () {
         <TabsContent value="handbook">
           <Handbook />
         </TabsContent>
-        <TabsContent value="settigns"></TabsContent>
+        <TabsContent value="settings">
+          <Settings />
+        </TabsContent>
       </Tabs>
     </div>
   );

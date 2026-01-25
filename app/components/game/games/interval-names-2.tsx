@@ -1,35 +1,30 @@
-import { randomNote } from '~/music/notes';
+import { type Interval, randomInterval, semitones } from '~/music/interval';
 import { useState } from 'react';
-import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
+import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { Chord } from '~/types/chord';
-import { chordName, compareChords, getChord } from '~/music/chord';
+import { IntervalsKeyboard } from '~/components/keyboard/intervals-keyboard';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
-import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
-import { GameChordNotes } from '~/components/game/gameChordNotes';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly type: 'Diminished' | 'Augmented';
-  readonly chord: Chord;
+  readonly interval: Interval;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'Diminished' : 'Augmented';
-
   return {
-    chord: getChord(randomNote(), type),
-    type,
+    interval: randomInterval(),
     timeStart: new Date().getTime()
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -39,14 +34,15 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onChordSelected = (chord: Chord): void => {
-    const check = compareChords(chord, data.chord);
+  const onIntervalSelected = (interval: Interval): void => {
+    const check = interval === data.interval;
+    const difference = semitones(data.interval);
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `It is ${chordName(data.chord)}`
-        : `Correct answer is ${chordName(data.chord)}, not ${chordName(chord)}.`
+        ? `${interval} is difference of ${difference} semitones.`
+        : `${data.interval} is difference of ${difference} semitones. Your answer was ${interval} - ${semitones(interval)} semitones.`
     };
 
     setResults([...results, currentResult]);
@@ -78,16 +74,17 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Name the chord</TypographyH2>
-            <GameChordNotes chord={data.chord} />
+            <TypographyH1>
+              Name interval of <span className="text-primary">{semitones(data.interval)}</span> semitones
+            </TypographyH1>
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
       </GameContent>
-      {!gameEnd && !result && (
+      {!gameEnd && !timer && !result && (
         <GameFooter>
-          <ChordKeyboard onSelect={onChordSelected} types={['Augmented', 'Diminished']} />
+          <IntervalsKeyboard onIntervalClick={onIntervalSelected} randomize={true} />
         </GameFooter>
       )}
     </Game>

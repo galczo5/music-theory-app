@@ -1,6 +1,8 @@
 import { Note, notesArray } from '~/music/notes';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { PlayerContext } from '~/components/midi-player/player';
+import { useSettings } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type KeyboardProps = {
   onNoteClick?: (note: Note) => void;
@@ -12,6 +14,8 @@ type KeyboardProps = {
 export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: KeyboardProps) => {
   const notes = notesArray.filter((x) => !x.includes('#'));
   const player = useContext(PlayerContext);
+  const settings = useSettings();
+  const [pianoLabels] = useState(settings.get(StoredSettings.pianoLabelsEnabled));
 
   const noteColor = (note: Note) => {
     const selected = Array.isArray(selectedNote) ? selectedNote : [selectedNote];
@@ -45,7 +49,7 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
             onClick={() => playNote(x)}
             className={noteColor(x) + ' pb-4 w-12 h-40 flex items-end justify-center cursor-pointer'}
           >
-            {x}
+            {pianoLabels && x}
           </div>
         ))}
       </div>
@@ -65,7 +69,7 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
                   noteColor(x) + ' rounded-b shadow pb-2 w-6 h-24 flex items-end justify-center cursor-pointer'
                 }
               >
-                {x}
+                {pianoLabels && x}
               </div>
             );
           }

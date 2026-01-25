@@ -12,15 +12,19 @@ import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
 import { PlayerButton } from '~/components/midi-player/player-button';
 import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly type: 'Major' | 'Minor';
+  readonly type: 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
   readonly chord: Chord;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'Major' : 'Minor';
+  const type1 = Math.random() < 0.5 ? 'Major 7' : 'Minor 7';
+  const type2 = Math.random() < 0.5 ? 'Major 9' : 'Minor 9';
+  const type = Math.random() < 0.5 ? type1 : type2;
 
   return {
     chord: getChord(randomNote(), type),
@@ -28,8 +32,7 @@ function generateData(): GameData {
     timeStart: new Date().getTime()
   };
 }
-
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -87,7 +90,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <ChordKeyboard onSelect={onChordSelected} types={['Major', 'Minor']} />
+          <ChordKeyboard onSelect={onChordSelected} types={['Major 7', 'Minor 7', 'Major 9', 'Minor 9']} />
         </GameFooter>
       )}
     </Game>

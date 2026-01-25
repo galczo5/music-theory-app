@@ -1,33 +1,39 @@
-import { type Note, randomNote } from '~/music/notes';
-import { type Interval, randomInterval, semitones } from '~/music/interval';
+import { randomNote } from '~/music/notes';
 import { useState } from 'react';
-import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
+import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
-import { GameHint } from '~/components/game/gameHint';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import { PlayerButton } from '~/components/midi-player/player-button';
-import { IntervalsKeyboard } from '~/components/keyboard/intervals-keyboard';
+import type { Chord } from '~/types/chord';
+import { chordName, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
+import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { GameChordNotes } from '~/components/game/gameChordNotes';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly rootNote: Note;
-  readonly interval: Interval;
+  readonly type: 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
+  readonly chord: Chord;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
+  const type1 = Math.random() < 0.5 ? 'Major 7' : 'Minor 7';
+  const type2 = Math.random() < 0.5 ? 'Major 9' : 'Minor 9';
+  const type = Math.random() < 0.5 ? type1 : type2;
+
   return {
-    rootNote: randomNote(),
-    interval: randomInterval(),
+    chord: getChord(randomNote(), type),
+    type,
     timeStart: new Date().getTime()
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -37,15 +43,14 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onIntervalSelected = (interval: Interval): void => {
-    const difference = semitones(data.interval);
-    const check = interval === data.interval;
+  const onChordSelected = (chord: Chord): void => {
+    const check = compareChords(chord, data.chord);
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `${interval} is difference of ${difference} semitones.`
-        : `${data.interval} is difference of ${difference} semitones. Your answer was ${interval} - ${semitones(interval)} semitones.`
+        ? `It is ${chordName(data.chord)}`
+        : `Correct answer is ${chordName(data.chord)}, not ${chordName(chord)}.`
     };
 
     setResults([...results, currentResult]);
@@ -77,19 +82,16 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH1>Listen to two notes and name the interval</TypographyH1>
-            <div className="mt-3">
-              <PlayerButton interval={[data.rootNote, data.interval]} />
-            </div>
+            <TypographyH2>Name the chord</TypographyH2>
+            <GameChordNotes chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
       </GameContent>
-      {!gameEnd && !timer && !result && (
+      {!gameEnd && !result && (
         <GameFooter>
-          <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
-          <IntervalsKeyboard onIntervalClick={onIntervalSelected} />
+          <ChordKeyboard onSelect={onChordSelected} types={['Major 7', 'Minor 7', 'Major 9', 'Minor 9']} />
         </GameFooter>
       )}
     </Game>

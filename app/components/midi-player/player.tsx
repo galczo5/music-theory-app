@@ -3,6 +3,8 @@ import { PolySynth, Synth } from 'tone';
 import { Note, notesArray } from '~/music/notes';
 import { type Interval, semitones } from '~/music/interval';
 import type { Chord } from '~/types/chord';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 function initSynth() {
   return new PolySynth(Synth, {
@@ -12,7 +14,16 @@ function initSynth() {
   }).toDestination();
 }
 
-const MIDI_VALUES: Record<Note, number> = {
+function getOctave(): number {
+  const storedSetting = getStoredSetting(StoredSettings.octaveUpEnabled);
+  if (storedSetting) {
+    return 0;
+  }
+
+  return -1;
+}
+
+const MIDI_VALUES = (): Record<Note, number> => ({
   [Note.C]: 60,
   [Note.CSharp]: 61,
   [Note.D]: 62,
@@ -25,21 +36,22 @@ const MIDI_VALUES: Record<Note, number> = {
   [Note.A]: 69,
   [Note.ASharp]: 70,
   [Note.B]: 71
-};
+});
 
 function midiNoteName(n: number): string {
   const octaveNumber = Math.floor(n / 12);
-  const octave = octaveNumber - 1;
+  const octave = octaveNumber + getOctave();
   const note = notesArray[n % 12] || '';
 
   return note.includes('#') ? `${note[0]}#${octave}` : `${note[0]}${octave}`;
 }
 
-const MIDI_NOTE_NAMES: Record<number, string> = Array.from({ length: 255 }, (_, i) => i)
-  .map((value) => [value, midiNoteName(value)])
-  .reduce((previousValue, currentValue) => {
-    return { ...previousValue, [currentValue[0]]: [currentValue[1]] };
-  }, {});
+const MIDI_NOTE_NAMES = (): Record<number, string> =>
+  Array.from({ length: 255 }, (_, i) => i)
+    .map((value) => [value, midiNoteName(value)])
+    .reduce((previousValue, currentValue) => {
+      return { ...previousValue, [currentValue[0]]: [currentValue[1]] };
+    }, {});
 
 const NOTE_TIME_IN_SECONDS = 1;
 
@@ -59,8 +71,8 @@ class Player {
   }
 
   async playInterval(note: Note, interval: Interval): Promise<void> {
-    const note1 = MIDI_NOTE_NAMES[MIDI_VALUES[note]];
-    const note2 = MIDI_NOTE_NAMES[MIDI_VALUES[note] + semitones(interval)];
+    const note1 = MIDI_NOTE_NAMES()[MIDI_VALUES()[note]];
+    const note2 = MIDI_NOTE_NAMES()[MIDI_VALUES()[note] + semitones(interval)];
 
     Player.synth1?.triggerAttackRelease(note1, NOTE_TIME_IN_SECONDS);
     await this.wait(NOTE_TIME_IN_SECONDS);
@@ -68,25 +80,25 @@ class Player {
   }
 
   playNote(note: Note) {
-    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES[note]], NOTE_TIME_IN_SECONDS);
+    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()[note]], NOTE_TIME_IN_SECONDS);
   }
 
   async testSound() {
     const TEST_DURATION = NOTE_TIME_IN_SECONDS / 4;
 
-    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()['C']], TEST_DURATION);
     await this.wait(TEST_DURATION * 2);
-    Player.synth2?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    Player.synth2?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()['C']], TEST_DURATION);
     await this.wait(TEST_DURATION * 2);
-    Player.synth3?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    Player.synth3?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()['C']], TEST_DURATION);
     await this.wait(TEST_DURATION * 2);
-    Player.synth4?.triggerAttackRelease(MIDI_NOTE_NAMES[MIDI_VALUES['C']], TEST_DURATION);
+    Player.synth4?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()['C']], TEST_DURATION);
 
     await this.wait(NOTE_TIME_IN_SECONDS);
 
-    for (let value of Object.values(MIDI_VALUES)) {
-      console.log('TEST SOUND', 'now playing', value, MIDI_NOTE_NAMES[value]);
-      Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES[value], TEST_DURATION);
+    for (let value of Object.values(MIDI_VALUES())) {
+      console.log('TEST SOUND', 'now playing', value, MIDI_NOTE_NAMES()[value]);
+      Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES()[value], TEST_DURATION);
       await this.wait(TEST_DURATION);
     }
   }
@@ -98,21 +110,21 @@ class Player {
   async playChord(chord: Chord) {
     const interval1Value = semitones(chord[1]);
     const interval2Value = semitones(chord[2]);
-    const rootNoteValue = MIDI_VALUES[chord[0]];
+    const rootNoteValue = MIDI_VALUES()[chord[0]];
 
-    const note1 = MIDI_NOTE_NAMES[rootNoteValue];
-    const note2 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value];
-    const note3 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value];
+    const note1 = MIDI_NOTE_NAMES()[rootNoteValue];
+    const note2 = MIDI_NOTE_NAMES()[rootNoteValue + interval1Value];
+    const note3 = MIDI_NOTE_NAMES()[rootNoteValue + interval1Value + interval2Value];
     let note4 = undefined;
     let note5 = undefined;
 
     if (chord[3]) {
       const interval3Value = semitones(chord[3]);
-      note4 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value + interval3Value];
+      note4 = MIDI_NOTE_NAMES()[rootNoteValue + interval1Value + interval2Value + interval3Value];
 
       if (chord[4]) {
         const interval4Value = semitones(chord[4]);
-        note5 = MIDI_NOTE_NAMES[rootNoteValue + interval1Value + interval2Value + interval3Value + interval4Value];
+        note5 = MIDI_NOTE_NAMES()[rootNoteValue + interval1Value + interval2Value + interval3Value + interval4Value];
       }
     }
 

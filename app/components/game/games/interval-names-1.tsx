@@ -1,28 +1,34 @@
-import { type Interval, randomInterval, semitones } from '~/music/interval';
+import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
+import { interval, type Note, randomNote } from '~/music/notes';
+import { type Interval, randomInterval, semitones, transpose } from '~/music/interval';
 import { useState } from 'react';
 import { TypographyH1, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
+import { GameHint } from '~/components/game/gameHint';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import { IntervalsKeyboard } from '~/components/keyboard/intervals-keyboard';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
+  readonly rootNote: Note;
   readonly interval: Interval;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
   return {
+    rootNote: randomNote(),
     interval: randomInterval(),
     timeStart: new Date().getTime()
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -32,15 +38,17 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onIntervalSelected = (interval: Interval): void => {
-    const check = interval === data.interval;
+  const onNoteSelected = (note: Note): void => {
+    const result = interval(data.rootNote, note);
+
     const difference = semitones(data.interval);
+    const check = result === difference % 12;
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `${interval} is difference of ${difference} semitones.`
-        : `${data.interval} is difference of ${difference} semitones. Your answer was ${interval} - ${semitones(interval)} semitones.`
+        ? `${note} is ${data.interval} of ${data.rootNote}`
+        : `${note} is NOT ${data.interval} of ${data.rootNote}. Correct answer is ${transpose(data.rootNote, data.interval)}.`
     };
 
     setResults([...results, currentResult]);
@@ -73,16 +81,17 @@ export default function () {
               {counter + 1} of {ROUNDS}
             </TypographyH3>
             <TypographyH1>
-              Name interval of <span className="text-primary">{semitones(data.interval)}</span> semitones
+              <span className="text-primary">{data.interval}</span> of {data.rootNote}
             </TypographyH1>
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
         {gameEnd && <GameSummary results={results} />}
       </GameContent>
-      {!gameEnd && !timer && !result && (
+      {!gameEnd && !result && (
         <GameFooter>
-          <IntervalsKeyboard onIntervalClick={onIntervalSelected} randomize={true} />
+          <GameHint hint={`${data.interval} equals to ${semitones(data.interval)} semitones`}></GameHint>
+          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={data.rootNote} play={true} />
         </GameFooter>
       )}
     </Game>

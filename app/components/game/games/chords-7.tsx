@@ -1,5 +1,4 @@
-import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
-import { type Note, randomNote } from '~/music/notes';
+import { randomNote } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
@@ -7,20 +6,23 @@ import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
 import type { Chord } from '~/types/chord';
-import { GameChord } from '~/components/game/gameChord';
-import { chordFromNotes, chordName, chordNotes, compareChords, getChord } from '~/music/chord';
+import { chordName, compareChords, getChord } from '~/music/chord';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
+import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
+import { GameChordNotes } from '~/components/game/gameChordNotes';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly type: 'Diminished' | 'Augmented';
+  readonly type: 'Major' | 'Minor';
   readonly chord: Chord;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'Diminished' : 'Augmented';
+  const type = Math.random() < 0.5 ? 'Major' : 'Minor';
 
   return {
     chord: getChord(randomNote(), type),
@@ -29,7 +31,7 @@ function generateData(): GameData {
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -38,23 +40,15 @@ export default function () {
   const [results, setResults] = useState<Result[]>([]);
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
-  const [selectedNotes, setSelectedNotes] = useState<Note[]>([]);
 
-  const onNoteSelected = (note: Note): void => {
-    const newNotes = [...selectedNotes, note];
-
-    if (newNotes.length < data.chord.length) {
-      setSelectedNotes(newNotes);
-      return;
-    }
-
-    const check = compareChords(data.chord, chordFromNotes(newNotes));
+  const onChordSelected = (chord: Chord): void => {
+    const check = compareChords(chord, data.chord);
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `${chordName(data.chord)} contains ${newNotes.join(' ')}`
-        : `${chordName(data.chord)} contains ${chordNotes(data.chord).join(' ')}, you selected ${newNotes.join(' ')}`
+        ? `It is ${chordName(data.chord)}`
+        : `Correct answer is ${chordName(data.chord)}, not ${chordName(chord)}.`
     };
 
     setResults([...results, currentResult]);
@@ -69,7 +63,6 @@ export default function () {
 
   const onContinue = () => {
     setResult(null);
-    setSelectedNotes([]);
 
     if (results.length === ROUNDS) {
       setGameEnd(true);
@@ -87,8 +80,8 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Construct the chord</TypographyH2>
-            <GameChord chord={data.chord} />
+            <TypographyH2>Name the chord</TypographyH2>
+            <GameChordNotes chord={data.chord} />
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
@@ -96,7 +89,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} selectedNote={selectedNotes} play={true} />
+          <ChordKeyboard onSelect={onChordSelected} types={['Major', 'Minor']} />
         </GameFooter>
       )}
     </Game>

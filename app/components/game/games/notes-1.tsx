@@ -1,35 +1,31 @@
-import { randomNote } from '~/music/notes';
+import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
+import { type Note, randomNote } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import type { Chord } from '~/types/chord';
-import { chordName, compareChords, getChord } from '~/music/chord';
+import { PlayerButton } from '~/components/midi-player/player-button';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
-import { ChordKeyboard } from '~/components/keyboard/chord-keyboard';
-import { GameChordNotes } from '~/components/game/gameChordNotes';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly type: 'Major' | 'Minor';
-  readonly chord: Chord;
+  readonly rootNote: Note;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'Major' : 'Minor';
-
   return {
-    chord: getChord(randomNote(), type),
-    type,
+    rootNote: randomNote(),
     timeStart: new Date().getTime()
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
@@ -39,14 +35,14 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onChordSelected = (chord: Chord): void => {
-    const check = compareChords(chord, data.chord);
+  const onNoteSelected = (note: Note): void => {
+    const check = note === data.rootNote;
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `It is ${chordName(data.chord)}`
-        : `Correct answer is ${chordName(data.chord)}, not ${chordName(chord)}.`
+        ? `You selected correct note - ${note}.`
+        : `You selected wrong note - ${note}, correct answer is ${data.rootNote}.`
     };
 
     setResults([...results, currentResult]);
@@ -78,8 +74,10 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Name the chord</TypographyH2>
-            <GameChordNotes chord={data.chord} />
+            <TypographyH2>Listen and select the right note</TypographyH2>
+            <div className="mt-3">
+              <PlayerButton note={data.rootNote} />
+            </div>
           </>
         )}
         {!gameEnd && result && <GameResult result={result} onContinue={onContinue} />}
@@ -87,7 +85,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <ChordKeyboard onSelect={onChordSelected} types={['Major', 'Minor']} />
+          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} play={true} />
         </GameFooter>
       )}
     </Game>

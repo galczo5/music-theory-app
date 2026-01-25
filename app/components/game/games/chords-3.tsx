@@ -12,15 +12,19 @@ import { chordFromNotes, chordName, chordNotes, compareChords, getChord } from '
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
+import { getStoredSetting } from '~/components/settings/settingsContext';
+import { StoredSettings } from '~/config/storedSettings';
 
 type GameData = {
-  readonly type: 'Major' | 'Minor';
+  readonly type: 'Major 7' | 'Minor 7' | 'Major 9' | 'Minor 9';
   readonly chord: Chord;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const type = Math.random() < 0.5 ? 'Major' : 'Minor';
+  const type1 = Math.random() < 0.5 ? 'Major 7' : 'Minor 7';
+  const type2 = Math.random() < 0.5 ? 'Major 9' : 'Minor 9';
+  const type = Math.random() < 0.5 ? type1 : type2;
 
   return {
     chord: getChord(randomNote(), type),
@@ -29,7 +33,7 @@ function generateData(): GameData {
   };
 }
 
-const ROUNDS = 10;
+const ROUNDS = getStoredSetting(StoredSettings.infiniteModeEnabled) ? 50 : 10;
 
 export default function () {
   const [gameEnd, setGameEnd] = useState(false);
