@@ -27,7 +27,7 @@ export const Handbook = () => {
         type="single"
         collapsible
         onValueChange={(v) => onLessonChange(v)}
-        className="max-w-2xl rounded-lg border bg-card"
+        className="max-w-2xl rounded-lg border bg-card shadow-sm"
       >
         {LESSONS.map((l) => (
           <AccordionItem key={l.title} value={l.title} className="border-b px-4 last:border-b-0">

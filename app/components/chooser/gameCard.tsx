@@ -12,7 +12,7 @@ export const GameCard = ({ game }: GameCardProp) => {
   const navigate = useNavigate();
   const disabledStyle = game.disabled ? 'grayscale select-none' : '';
   return (
-    <Item variant="outline" className={'bg-card ' + disabledStyle}>
+    <Item variant="outline" className={'shadow-sm bg-card ' + disabledStyle}>
       <ItemMedia variant="icon">{getGameIcon(game)}</ItemMedia>
       <ItemContent>
         <ItemTitle>{game.name}</ItemTitle>

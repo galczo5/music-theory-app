@@ -25,7 +25,7 @@ export const ChooserHeader = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="outline" onClick={() => setTheme(theme !== 'dark' ? 'dark' : 'light')}>
+        <Button variant="outline" size="icon" onClick={() => setTheme(theme !== 'dark' ? 'dark' : 'light')}>
           {theme === 'dark' ? <Sun /> : <Moon />}
         </Button>
         <Button variant="outline" className="hidden md:inline-flex" onClick={navigateToGitHub}>
