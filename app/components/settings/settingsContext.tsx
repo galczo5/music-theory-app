@@ -12,13 +12,15 @@ type SettingsContextType = {
 const settings: Record<StoredSettings, boolean> = {
   [StoredSettings.hintsEnabled]: true,
   [StoredSettings.history]: true,
-  [StoredSettings.infiniteModeEnabled]: true,
-  [StoredSettings.octaveUpEnabled]: true,
+  [StoredSettings.infiniteModeEnabled]: false,
+  [StoredSettings.octaveUpEnabled]: false,
   [StoredSettings.pianoLabelsEnabled]: true
 };
 
 const defaultSettingsContext = (): SettingsContextType => {
   let corrupted = true;
+
+  let data = { ...settings };
 
   try {
     const storedValue = localStorage.getItem('storedSettings') || JSON.stringify({});
@@ -28,7 +30,11 @@ const defaultSettingsContext = (): SettingsContextType => {
     return {
       corrupted,
       getAll: () => data,
-      clear: () => localStorage.clear(),
+      clear: () => {
+        data = { ...settings };
+        localStorage.removeItem('storedSettings');
+        corrupted = false;
+      },
       set: (key, value) => {
         data = { ...data, [key]: value };
         localStorage.setItem('storedSettings', JSON.stringify(data));
@@ -42,8 +48,12 @@ const defaultSettingsContext = (): SettingsContextType => {
   return {
     corrupted,
     getAll: () => settings,
-    clear: () => {},
-    get: () => true,
+    clear: () => {
+      data = { ...settings };
+      localStorage.removeItem('storedSettings');
+      corrupted = false;
+    },
+    get: () => false,
     set: () => {}
   };
 };
