@@ -9,7 +9,7 @@ type SettingsContextType = {
   set: (key: StoredSettings, value: boolean) => void;
 };
 
-const settings: Record<StoredSettings, boolean> = {
+const DEFAULT: Record<StoredSettings, boolean> = {
   [StoredSettings.hintsEnabled]: true,
   [StoredSettings.history]: true,
   [StoredSettings.infiniteModeEnabled]: false,
@@ -20,18 +20,18 @@ const settings: Record<StoredSettings, boolean> = {
 const defaultSettingsContext = (): SettingsContextType => {
   let corrupted = true;
 
-  let data = { ...settings };
+  let data = { ...DEFAULT };
 
   try {
     const storedValue = localStorage.getItem('storedSettings') || JSON.stringify({});
-    let data = { ...settings, ...JSON.parse(storedValue) };
+    let data = { ...DEFAULT, ...JSON.parse(storedValue) };
     corrupted = false;
 
     return {
       corrupted,
       getAll: () => data,
       clear: () => {
-        data = { ...settings };
+        data = { ...DEFAULT };
         localStorage.removeItem('storedSettings');
         corrupted = false;
       },
@@ -47,9 +47,9 @@ const defaultSettingsContext = (): SettingsContextType => {
 
   return {
     corrupted,
-    getAll: () => settings,
+    getAll: () => DEFAULT,
     clear: () => {
-      data = { ...settings };
+      data = { ...DEFAULT };
       localStorage.removeItem('storedSettings');
       corrupted = false;
     },

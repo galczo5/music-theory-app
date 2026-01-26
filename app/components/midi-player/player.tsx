@@ -70,17 +70,22 @@ class Player {
     if (!Player.synth5) Player.synth5 = initSynth();
   }
 
-  async playInterval(note: Note, interval: Interval): Promise<void> {
-    const note1 = MIDI_NOTE_NAMES()[MIDI_VALUES()[note]];
-    const note2 = MIDI_NOTE_NAMES()[MIDI_VALUES()[note] + semitones(interval)];
+  async playInterval(note: Note, interval: Interval, octave?: number): Promise<void> {
+    const transition = (octave || 0) * 12;
+    const rootNoteValue = MIDI_VALUES()[note] + transition;
+    const note1 = MIDI_NOTE_NAMES()[rootNoteValue];
+    const note2 = MIDI_NOTE_NAMES()[rootNoteValue + semitones(interval)];
 
     Player.synth1?.triggerAttackRelease(note1, NOTE_TIME_IN_SECONDS);
     await this.wait(NOTE_TIME_IN_SECONDS);
     Player.synth2?.triggerAttackRelease(note2, NOTE_TIME_IN_SECONDS);
   }
 
-  playNote(note: Note) {
-    Player.synth1?.triggerAttackRelease(MIDI_NOTE_NAMES()[MIDI_VALUES()[note]], NOTE_TIME_IN_SECONDS);
+  playNote(note: Note, octave?: number) {
+    const transition = (octave || 0) * 12;
+    const value = MIDI_VALUES()[note] + transition;
+    const rootNote = MIDI_NOTE_NAMES()[value];
+    Player.synth1?.triggerAttackRelease(rootNote, NOTE_TIME_IN_SECONDS);
   }
 
   async testSound() {
@@ -107,10 +112,12 @@ class Player {
     return new Promise((resolve) => setTimeout(resolve, sec * 1000));
   }
 
-  async playChord(chord: Chord) {
+  async playChord(chord: Chord, octave?: number) {
     const interval1Value = semitones(chord[1]);
     const interval2Value = semitones(chord[2]);
-    const rootNoteValue = MIDI_VALUES()[chord[0]];
+
+    const transition = (octave || 0) * 12;
+    const rootNoteValue = MIDI_VALUES()[chord[0]] + transition;
 
     const note1 = MIDI_NOTE_NAMES()[rootNoteValue];
     const note2 = MIDI_NOTE_NAMES()[rootNoteValue + interval1Value];
