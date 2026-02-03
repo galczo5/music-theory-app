@@ -1,5 +1,5 @@
 import { PianoKeyboard } from '~/components/keyboard/piano-keyboard';
-import { type Note, notesArray, Note as NoteEnum } from '~/music/notes';
+import { type Note, randomNote } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
@@ -13,18 +13,14 @@ import { GameFooter } from '~/components/game/gameFooter';
 import { getStoredSetting } from '~/components/settings/settingsContext';
 import { StoredSettings } from '~/config/storedSettings';
 
-const ALLOWED_NOTES = [NoteEnum.C, NoteEnum.D, NoteEnum.E];
-const DISABLED_NOTES = notesArray.filter((note) => !ALLOWED_NOTES.includes(note));
-
 type GameData = {
   readonly rootNote: Note;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const randomIndex = Math.floor(Math.random() * ALLOWED_NOTES.length);
   return {
-    rootNote: ALLOWED_NOTES[randomIndex],
+    rootNote: randomNote(),
     timeStart: new Date().getTime()
   };
 }
@@ -89,7 +85,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} play={true} disabledNotes={DISABLED_NOTES} />
+          <PianoKeyboard onNoteClick={onNoteSelected} disabled={timer} play={true} />
         </GameFooter>
       )}
     </Game>

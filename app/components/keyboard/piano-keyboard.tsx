@@ -9,27 +9,35 @@ type KeyboardProps = {
   selectedNote?: Note | Note[];
   play?: boolean;
   disabled?: boolean;
+  disabledNotes?: Note[];
 };
 
-export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: KeyboardProps) => {
+export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled, disabledNotes = [] }: KeyboardProps) => {
   const notes = notesArray.filter((x) => !x.includes('#'));
   const player = useContext(PlayerContext);
   const settings = useSettings();
   const [pianoLabels] = useState(settings.get(StoredSettings.pianoLabelsEnabled));
+
+  const isNoteDisabled = (note: Note) => disabledNotes.includes(note);
 
   const noteColor = (note: Note) => {
     const selected = Array.isArray(selectedNote) ? selectedNote : [selectedNote];
     const isFirst = Note.C === note;
     const isLast = Note.B === note;
     const rounding = isFirst ? 'rounded-l-xl' : isLast ? 'rounded-r-xl' : '';
+    const isDisabled = isNoteDisabled(note);
 
     if (selected.includes(note)) return `bg-primary text-white border-black ${rounding}`;
+    if (note.includes('#') && isDisabled) return `bg-gray-100 text-black border ${rounding} cursor-not-allowed`;
     if (note.includes('#')) return 'bg-black text-white border-black hover:bg-gray-900';
+    if (isDisabled) return `bg-gray-100 text-gray-500 border dark:border-black ${rounding} cursor-not-allowed`;
 
     return `bg-white text-black hover:bg-gray-100 border dark:border-black ${rounding}`;
   };
 
   const playNote = (note: Note) => {
+    if (isNoteDisabled(note)) return;
+
     if (play) {
       player.playNote(note);
     }
@@ -47,7 +55,11 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
           <div
             key={x}
             onClick={() => playNote(x)}
-            className={noteColor(x) + ' pb-4 w-12 h-40 flex items-end justify-center cursor-pointer'}
+            className={
+              noteColor(x) +
+              ' pb-4 w-12 h-40 flex items-end justify-center ' +
+              (isNoteDisabled(x) ? 'cursor-not-allowed' : 'cursor-pointer')
+            }
           >
             {pianoLabels && x}
           </div>
@@ -66,7 +78,9 @@ export const PianoKeyboard = ({ onNoteClick, selectedNote, play, disabled }: Key
                 key={x}
                 onClick={() => playNote(x)}
                 className={
-                  noteColor(x) + ' rounded-b shadow pb-2 w-6 h-24 flex items-end justify-center cursor-pointer'
+                  noteColor(x) +
+                  ' rounded-b shadow pb-2 w-6 h-24 flex items-end justify-center ' +
+                  (isNoteDisabled(x) ? 'cursor-not-allowed' : 'cursor-pointer')
                 }
               >
                 {pianoLabels && x}
