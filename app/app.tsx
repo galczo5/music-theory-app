@@ -8,6 +8,7 @@ import IntervalNames from '~/components/game/games/interval-names-1';
 import IntervalNames2 from '~/components/game/games/interval-names-2';
 import IntervalNames3 from '~/components/game/games/interval-names-3';
 import Notes1 from '~/components/game/games/notes-1';
+import Notes2 from '~/components/game/games/notes-2';
 import Notes3 from '~/components/game/games/notes-3';
 import Chords1 from '~/components/game/games/chords-1';
 import Chords2 from '~/components/game/games/chords-2';
@@ -30,6 +31,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/play" element={<Chooser />} />
               <Route path="/play/notes-1" element={<Notes1 />} />
+              <Route path="/play/notes-2" element={<Notes2 />} />
               <Route path="/play/notes-3" element={<Notes3 />} />
               <Route path="/play/interval-names-1" element={<IntervalNames />} />
               <Route path="/play/interval-names-2" element={<IntervalNames2 />} />
