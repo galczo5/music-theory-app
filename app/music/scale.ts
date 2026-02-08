@@ -1,4 +1,4 @@
-import { Interval } from '~/music/interval';
+import { Interval, transpose } from '~/music/interval';
 import type { Note } from '~/music/notes';
 import type {
   AeolianScale,
@@ -100,4 +100,19 @@ export function getScale(rootNote: Note, type: ScaleType): Scale {
     case 'Locrian':
       return [rootNote, ...LOCRIAN];
   }
+}
+
+export function scaleNotes(scale: Scale): Note[] {
+  const [root, ...intervals] = scale;
+  const notes: Note[] = [root];
+  let current = root;
+  for (const interval of intervals) {
+    current = transpose(current, interval);
+    notes.push(current);
+  }
+  return notes;
+}
+
+export function compareScale(scale1: Scale, scale2: Scale): boolean {
+  return scale1.length === scale2.length && scale1.every((v, i) => v === scale2[i]);
 }
