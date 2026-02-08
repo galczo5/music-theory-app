@@ -1,4 +1,5 @@
 import type { Interval } from '~/music/interval';
+import type { Note } from '~/music/notes';
 
 export type IonianScale = [
   Interval.MajorSecond,
@@ -70,7 +71,7 @@ export type LocrianScale = [
   Interval.MajorSecond
 ];
 
-export type Scale =
+export type ScaleIntervals =
   | IonianScale
   | DorianScale
   | PhrygianScale
@@ -78,3 +79,5 @@ export type Scale =
   | MixolydianScale
   | AeolianScale
   | LocrianScale;
+
+export type Scale = [Note, ...ScaleIntervals];
