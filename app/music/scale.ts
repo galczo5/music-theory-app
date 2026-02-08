@@ -8,7 +8,8 @@ import type {
   LydianScale,
   MixolydianScale,
   PhrygianScale,
-  Scale
+  Scale,
+  ScaleIntervals
 } from '~/types/scale';
 
 export type ScaleType = 'Ionian' | 'Dorian' | 'Phrygian' | 'Lydian' | 'Mixolydian' | 'Aeolian' | 'Locrian';
@@ -83,6 +84,16 @@ const LOCRIAN: LocrianScale = [
   Interval.MajorSecond
 ];
 
+const SCALE_PATTERNS: { type: ScaleType; intervals: ScaleIntervals }[] = [
+  { type: 'Ionian', intervals: IONIAN },
+  { type: 'Dorian', intervals: DORIAN },
+  { type: 'Phrygian', intervals: PHRYGIAN },
+  { type: 'Lydian', intervals: LYDIAN },
+  { type: 'Mixolydian', intervals: MIXOLYDIAN },
+  { type: 'Aeolian', intervals: AEOLIAN },
+  { type: 'Locrian', intervals: LOCRIAN }
+];
+
 export function getScale(rootNote: Note, type: ScaleType): Scale {
   switch (type) {
     case 'Ionian':
@@ -115,4 +126,13 @@ export function scaleNotes(scale: Scale): Note[] {
 
 export function compareScale(scale1: Scale, scale2: Scale): boolean {
   return scale1.length === scale2.length && scale1.every((v, i) => v === scale2[i]);
+}
+
+export function scaleName(scale: Scale): string {
+  const root = scale[0];
+  const intervals = scale.slice(1);
+  const pattern = SCALE_PATTERNS.find(
+    ({ intervals: p }) => p.length === intervals.length && p.every((v, i) => v === intervals[i])
+  );
+  return pattern ? `${root} ${pattern.type}` : root;
 }
