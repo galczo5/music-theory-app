@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Forward } from 'lucide-react';
 import { Separator } from '~/components/ui/separator';
 import { Card, CardContent } from '~/components/ui/card';
-import type { ScaleType } from '~/music/scale';
+import { getScale, type ScaleType } from '~/music/scale';
 import type { Scale } from '~/types/scale';
 
 type KeyboardProps = {
@@ -32,7 +32,7 @@ export const ScalesKeyboard = ({ onSelect, types }: KeyboardProps) => {
       return;
     }
 
-    onSelect && onSelect();
+    onSelect && onSelect(getScale(note, type));
   };
 
   const clear = () => {

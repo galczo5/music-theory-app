@@ -1,30 +1,28 @@
-import { type Note, Note as NoteEnum, notesArray } from '~/music/notes';
+import { type Note } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
 import { GameTimer } from '~/components/game/gameTimer';
 import { GameResult } from '~/components/game/gameResult';
 import { GameSummary } from '~/components/game/gameSummary';
-import { PlayerButton } from '~/components/midi-player/player-button';
 import { Game } from '~/components/game/game';
 import { GameContent } from '~/components/game/gameContent';
 import { GameFooter } from '~/components/game/gameFooter';
 import { getStoredSetting } from '~/components/settings/settingsContext';
 import { StoredSettings } from '~/config/storedSettings';
 import { ScalesKeyboard } from '~/components/keyboard/scales-keyboard';
-
-const ALLOWED_NOTES = [NoteEnum.C, NoteEnum.D, NoteEnum.E];
-const DISABLED_NOTES = notesArray.filter((note) => !ALLOWED_NOTES.includes(note));
+import type { Scale } from '~/types/scale';
+import { randomScale } from '~/music/scale';
+import { GameScaleNotes } from '~/components/game/gameScaleNotes';
 
 type GameData = {
-  readonly rootNote: Note;
+  readonly scale: Scale;
   readonly timeStart: number;
 };
 
 function generateData(): GameData {
-  const randomIndex = Math.floor(Math.random() * ALLOWED_NOTES.length);
   return {
-    rootNote: ALLOWED_NOTES[randomIndex],
+    scale: randomScale(),
     timeStart: new Date().getTime()
   };
 }
@@ -78,9 +76,9 @@ export default function () {
             <TypographyH3>
               {counter + 1} of {ROUNDS}
             </TypographyH3>
-            <TypographyH2>Listen and select the right note</TypographyH2>
+            <TypographyH2>Name the scale</TypographyH2>
             <div className="mt-3">
-              <PlayerButton note={data.rootNote} />
+              <GameScaleNotes scale={data.scale} />
             </div>
           </>
         )}
