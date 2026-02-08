@@ -118,7 +118,6 @@ export const GAMES: Game[] = [
     type: 'listen',
     name: 'Scales 2',
     description: 'Construct the requested musical scales.',
-    path: '/play/scales-2',
-    disabled: true
+    path: '/play/scales-2'
   }
 ];

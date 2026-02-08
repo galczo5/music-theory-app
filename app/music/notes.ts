@@ -29,3 +29,7 @@ export function interval(rootNote: Note, note2: Note): number {
 export function randomNote(): Note {
   return notesArray[Math.floor(Math.random() * notesArray.length)];
 }
+
+export function notesMatch(selected: Note[], expected: Note[]): boolean {
+  return selected.length === expected.length && selected.every((n, i) => n === expected[i]);
+}

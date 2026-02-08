@@ -21,6 +21,7 @@ import Chords8 from '~/components/game/games/chords-8';
 import Chords9 from '~/components/game/games/chords-9';
 import { DefaultSettingsContext, SettingsContext } from '~/components/settings/settingsContext';
 import Scales1 from '~/components/game/games/scales-1';
+import Scales2 from '~/components/game/games/scales-2';
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/play/chords-8" element={<Chords8 />} />
               <Route path="/play/chords-9" element={<Chords9 />} />
               <Route path="/play/scales-1" element={<Scales1 />} />
+              <Route path="/play/scales-2" element={<Scales2 />} />
             </Routes>
           </HashRouter>
         </SettingsContext.Provider>
