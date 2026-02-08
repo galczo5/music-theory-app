@@ -101,12 +101,7 @@ export default function Scales2() {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <PianoKeyboard
-            onNoteClick={onNoteClick}
-            selectedNote={selectedNotes}
-            play={true}
-            disabled={timer}
-          />
+          <PianoKeyboard onNoteClick={onNoteClick} selectedNote={selectedNotes} play={true} disabled={timer} />
         </GameFooter>
       )}
     </Game>
