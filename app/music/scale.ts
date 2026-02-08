@@ -1,5 +1,5 @@
 import { Interval, transpose } from '~/music/interval';
-import type { Note } from '~/music/notes';
+import { randomNote, type Note } from '~/music/notes';
 import type {
   AeolianScale,
   DorianScale,
@@ -13,6 +13,8 @@ import type {
 } from '~/types/scale';
 
 export type ScaleType = 'Ionian' | 'Dorian' | 'Phrygian' | 'Lydian' | 'Mixolydian' | 'Aeolian' | 'Locrian';
+
+const SCALE_TYPES: ScaleType[] = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 
 const IONIAN: IonianScale = [
   Interval.MajorSecond,
@@ -135,4 +137,9 @@ export function scaleName(scale: Scale): string {
     ({ intervals: p }) => p.length === intervals.length && p.every((v, i) => v === intervals[i])
   );
   return pattern ? `${root} ${pattern.type}` : root;
+}
+
+export function randomScale(): Scale {
+  const type = SCALE_TYPES[Math.floor(Math.random() * SCALE_TYPES.length)]!;
+  return getScale(randomNote(), type);
 }
