@@ -1,4 +1,3 @@
-import { type Note } from '~/music/notes';
 import { useState } from 'react';
 import { TypographyH2, TypographyH3 } from '~/components/ui/typography';
 import type { Result } from '~/types/game';
@@ -12,7 +11,7 @@ import { getStoredSetting } from '~/components/settings/settingsContext';
 import { StoredSettings } from '~/config/storedSettings';
 import { ScalesKeyboard } from '~/components/keyboard/scales-keyboard';
 import type { Scale } from '~/types/scale';
-import { randomScale } from '~/music/scale';
+import { randomScale, compareScale, scaleName } from '~/music/scale';
 import { GameScaleNotes } from '~/components/game/gameScaleNotes';
 
 type GameData = {
@@ -37,14 +36,15 @@ export default function () {
   const [result, setResult] = useState<Result | null>(null);
   const [counter, setCounter] = useState(0);
 
-  const onNoteSelected = (note: Note): void => {
-    const check = note === data.rootNote;
+  const onScaleSelected = (scale: Scale): void => {
+    const check = compareScale(scale, data.scale);
+    const correctName = scaleName(data.scale);
     const currentResult: Result = {
       result: check,
       time: new Date().getTime() - data.timeStart,
       description: check
-        ? `You selected correct note - ${note}.`
-        : `You selected wrong note - ${note}, correct answer is ${data.rootNote}.`
+        ? `You selected the correct scale - ${correctName}.`
+        : `You selected the wrong scale. The correct answer is ${correctName}.`
     };
 
     setResults([...results, currentResult]);
@@ -87,7 +87,7 @@ export default function () {
       </GameContent>
       {!gameEnd && !result && (
         <GameFooter>
-          <ScalesKeyboard />
+          <ScalesKeyboard onSelect={onScaleSelected} />
         </GameFooter>
       )}
     </Game>
