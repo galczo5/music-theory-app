@@ -9,7 +9,7 @@ export const GameNav = () => {
   const player = usePlayer();
   return (
     <div className="p-4 w-full flex justify-between items-center border-b">
-      <div className="gap-2 items-center hidden md:flex">
+      <div className="gap-2 items-center hidden md:flex cursor-pointer" onClick={() => navigate('/play')}>
         <Library />
         <TypographyH3>Music Theory App</TypographyH3>
       </div>
