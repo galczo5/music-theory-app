@@ -1,4 +1,4 @@
-import { Note, notesArray } from '~/music/notes';
+import { FlatNote, flatNotesArray, Note, notesArray } from '~/music/notes';
 import { Button } from '~/components/ui/button';
 import { useState } from 'react';
 import { Forward } from 'lucide-react';
@@ -13,10 +13,11 @@ type KeyboardProps = {
 };
 
 export const ScalesKeyboard = ({ onSelect, types }: KeyboardProps) => {
-  const [note, setNote] = useState<Note | undefined>();
+  const [note, setNote] = useState<Note | FlatNote | undefined>();
   const [type, setType] = useState<ScaleType | undefined>();
 
   const notes = [...notesArray];
+  const flatNotes = [...flatNotesArray];
   const typeOptions: Array<ScaleType> = types || [
     'Ionian',
     'Dorian',
@@ -45,6 +46,16 @@ export const ScalesKeyboard = ({ onSelect, types }: KeyboardProps) => {
       <CardContent>
         <div className="flex justify-center flex-wrap gap-2">
           {notes.map((n) => (
+            <Button onClick={() => setNote(n)} variant={note === n ? 'default' : 'outline'}>
+              {n}
+            </Button>
+          ))}
+        </div>
+      </CardContent>
+      <Separator />
+      <CardContent>
+        <div className="flex justify-center flex-wrap gap-2">
+          {flatNotes.map((n) => (
             <Button onClick={() => setNote(n)} variant={note === n ? 'default' : 'outline'}>
               {n}
             </Button>

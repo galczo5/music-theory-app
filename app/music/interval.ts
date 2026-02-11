@@ -1,4 +1,4 @@
-import { type Note, notesArray } from '~/music/notes';
+import { FlatNote, normalizeFlatNote, type Note, notesArray } from '~/music/notes';
 
 export enum Interval {
   PerfectUnison = 'Perfect unison',
@@ -28,14 +28,16 @@ export function randomInterval(): Interval {
   return intervalArray.at(random) || Interval.PerfectOctave;
 }
 
-export function transpose(rootNote: Note, interval: Interval): Note {
+export function transpose(rootNote: Note | FlatNote, interval: Interval): Note {
+  const normalizedNote = normalizeFlatNote(rootNote);
+
   if (interval === Interval.PerfectOctave) {
-    return rootNote;
+    return normalizedNote;
   }
 
   let copy = [...notesArray];
 
-  while (copy.at(0) !== rootNote) {
+  while (copy.at(0) !== normalizedNote) {
     const [first, ...rest] = copy;
     copy = [...rest, first];
   }

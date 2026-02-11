@@ -1,5 +1,15 @@
 import { Interval, transpose } from '~/music/interval';
-import { deSharpNote, interval, Note, notesArray, randomNote } from '~/music/notes';
+import {
+  FlatNote,
+  getNoteStep,
+  getNoteStepsArray,
+  interval,
+  normalizeFlatNote,
+  Note,
+  notesArray,
+  randomNote,
+  toFlatNote
+} from '~/music/notes';
 import type {
   AeolianScale,
   DorianScale,
@@ -96,7 +106,7 @@ const SCALE_PATTERNS: { type: ScaleType; intervals: ScaleIntervals }[] = [
   { type: 'Locrian', intervals: LOCRIAN }
 ];
 
-export function getScale(rootNote: Note, type: ScaleType): Scale {
+export function getScale(rootNote: Note | FlatNote, type: ScaleType): Scale {
   switch (type) {
     case 'Ionian':
       return [rootNote, ...IONIAN];
@@ -115,13 +125,34 @@ export function getScale(rootNote: Note, type: ScaleType): Scale {
   }
 }
 
-export function scaleNotes(scale: Scale): Note[] {
+export function scaleNotes(scale: Scale): Array<Note | FlatNote> {
   const [root, ...intervals] = scale;
-  const notes: Note[] = [root];
+  const notes: Array<Note | FlatNote> = [root];
+
+  const steps = getNoteStepsArray(root);
+
   let current = root;
-  for (const interval of intervals) {
-    current = transpose(current, interval);
-    notes.push(current);
+  for (const i of intervals) {
+    const targetStep = steps.shift() as Note;
+    const normalizedCurrent = normalizeFlatNote(current);
+    current = transpose(normalizedCurrent, i);
+
+    if (getNoteStep(current) === targetStep) {
+      notes.push(current);
+      continue;
+    }
+
+    const semitones = interval(current, targetStep);
+
+    if (Math.min(Math.abs(semitones - notesArray.length), Math.abs(semitones)) > 1) {
+      throw new Error('Double flat notes are not implemented!');
+    }
+
+    notes.push(toFlatNote(current));
+  }
+
+  if (notes.length !== 8) {
+    throw new Error('Not enough notes for scale');
   }
   return notes;
 }
@@ -142,34 +173,4 @@ export function scaleName(scale: Scale): string {
 export function randomScale(): Scale {
   const type = SCALE_TYPES[Math.floor(Math.random() * SCALE_TYPES.length)]!;
   return getScale(randomNote(), type);
-}
-
-export function normalizedScaleNotes(scale: Scale): string[] {
-  const steps: Note[] = [Note.C, Note.D, Note.E, Note.F, Note.G, Note.A, Note.B];
-  const notes = scaleNotes(scale);
-  const offset = steps.indexOf(deSharpNote(notes[0]));
-
-  for (let i = 0; i < offset; i++) {
-    const first = steps.shift() as Note;
-    steps.push(first);
-  }
-
-  return notes.map((note) => {
-    const desharp = deSharpNote(note);
-    const step = steps.shift() as Note;
-    steps.push(step);
-
-    if (desharp === step) {
-      return note;
-    }
-
-    let semitones = interval(step, note);
-
-    if (Math.abs(semitones - notesArray.length) < Math.abs(semitones)) {
-      semitones = semitones - notesArray.length;
-    }
-
-    const sign = semitones < 0 ? '♭' : '#';
-    return step + sign.repeat(Math.abs(semitones));
-  });
 }
