@@ -33,3 +33,20 @@ export function randomNote(): Note {
 export function notesMatch(selected: Note[], expected: Note[]): boolean {
   return selected.length === expected.length && selected.every((n, i) => n === expected[i]);
 }
+
+export function deSharpNote(note: Note): Note {
+  switch (note) {
+    case Note.CSharp:
+      return Note.C;
+    case Note.DSharp:
+      return Note.D;
+    case Note.FSharp:
+      return Note.F;
+    case Note.GSharp:
+      return Note.G;
+    case Note.ASharp:
+      return Note.A;
+    default:
+      return note;
+  }
+}

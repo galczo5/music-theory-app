@@ -1,5 +1,5 @@
 import type { Scale } from '~/types/scale';
-import { scaleNotes } from '~/music/scale';
+import { normalizedScaleNotes } from '~/music/scale';
 import { Card, CardContent } from '~/components/ui/card';
 import { Dot } from 'lucide-react';
 
@@ -8,7 +8,7 @@ type GameScaleNotesProps = {
 };
 
 export const GameScaleNotes = ({ scale }: GameScaleNotesProps) => {
-  const notes = scaleNotes(scale);
+  const notes = normalizedScaleNotes(scale);
   return (
     <div className="flex items-center text-center">
       <Card>

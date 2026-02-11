@@ -1,5 +1,5 @@
 import { Interval, transpose } from '~/music/interval';
-import { randomNote, type Note } from '~/music/notes';
+import { deSharpNote, interval, Note, notesArray, randomNote } from '~/music/notes';
 import type {
   AeolianScale,
   DorianScale,
@@ -142,4 +142,34 @@ export function scaleName(scale: Scale): string {
 export function randomScale(): Scale {
   const type = SCALE_TYPES[Math.floor(Math.random() * SCALE_TYPES.length)]!;
   return getScale(randomNote(), type);
+}
+
+export function normalizedScaleNotes(scale: Scale): string[] {
+  const steps: Note[] = [Note.C, Note.D, Note.E, Note.F, Note.G, Note.A, Note.B];
+  const notes = scaleNotes(scale);
+  const offset = steps.indexOf(deSharpNote(notes[0]));
+
+  for (let i = 0; i < offset; i++) {
+    const first = steps.shift() as Note;
+    steps.push(first);
+  }
+
+  return notes.map((note) => {
+    const desharp = deSharpNote(note);
+    const step = steps.shift() as Note;
+    steps.push(step);
+
+    if (desharp === step) {
+      return note;
+    }
+
+    let semitones = interval(step, note);
+
+    if (Math.abs(semitones - notesArray.length) < Math.abs(semitones)) {
+      semitones = semitones - notesArray.length;
+    }
+
+    const sign = semitones < 0 ? '♭' : '#';
+    return step + sign.repeat(Math.abs(semitones));
+  });
 }
