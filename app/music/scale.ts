@@ -1,102 +1,31 @@
-import { Interval, transpose } from '~/music/interval';
-import { randomNote, type Note } from '~/music/notes';
-import type {
-  AeolianScale,
-  DorianScale,
-  IonianScale,
-  LocrianScale,
-  LydianScale,
-  MixolydianScale,
-  PhrygianScale,
-  Scale,
-  ScaleIntervals
-} from '~/types/scale';
+import { transpose } from '~/music/interval';
+import {
+  FlatNote,
+  getNoteStep,
+  getNoteStepsArray,
+  interval,
+  normalizeFlatNote,
+  Note,
+  notesArray,
+  randomNote,
+  toFlatNote
+} from '~/music/notes';
+import type { Scale } from '~/types/scale';
+import {
+  AEOLIAN,
+  DORIAN,
+  IONIAN,
+  LOCRIAN,
+  LYDIAN,
+  MIXOLYDIAN,
+  PHRYGIAN,
+  SCALE_PATTERNS,
+  SCALE_TYPES
+} from '~/music/scale.const';
 
 export type ScaleType = 'Ionian' | 'Dorian' | 'Phrygian' | 'Lydian' | 'Mixolydian' | 'Aeolian' | 'Locrian';
 
-const SCALE_TYPES: ScaleType[] = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
-
-const IONIAN: IonianScale = [
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond
-];
-
-const DORIAN: DorianScale = [
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond
-];
-
-const PHRYGIAN: PhrygianScale = [
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond
-];
-
-const LYDIAN: LydianScale = [
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond
-];
-
-const MIXOLYDIAN: MixolydianScale = [
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond
-];
-
-const AEOLIAN: AeolianScale = [
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond
-];
-
-const LOCRIAN: LocrianScale = [
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MinorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond,
-  Interval.MajorSecond
-];
-
-const SCALE_PATTERNS: { type: ScaleType; intervals: ScaleIntervals }[] = [
-  { type: 'Ionian', intervals: IONIAN },
-  { type: 'Dorian', intervals: DORIAN },
-  { type: 'Phrygian', intervals: PHRYGIAN },
-  { type: 'Lydian', intervals: LYDIAN },
-  { type: 'Mixolydian', intervals: MIXOLYDIAN },
-  { type: 'Aeolian', intervals: AEOLIAN },
-  { type: 'Locrian', intervals: LOCRIAN }
-];
-
-export function getScale(rootNote: Note, type: ScaleType): Scale {
+export function getScale(rootNote: Note | FlatNote, type: ScaleType): Scale {
   switch (type) {
     case 'Ionian':
       return [rootNote, ...IONIAN];
@@ -115,13 +44,34 @@ export function getScale(rootNote: Note, type: ScaleType): Scale {
   }
 }
 
-export function scaleNotes(scale: Scale): Note[] {
+export function scaleNotes(scale: Scale): Array<Note | FlatNote> {
   const [root, ...intervals] = scale;
-  const notes: Note[] = [root];
+  const notes: Array<Note | FlatNote> = [root];
+
+  const steps = getNoteStepsArray(root);
+
   let current = root;
-  for (const interval of intervals) {
-    current = transpose(current, interval);
-    notes.push(current);
+  for (const i of intervals) {
+    const targetStep = steps.shift() as Note;
+    const normalizedCurrent = normalizeFlatNote(current);
+    current = transpose(normalizedCurrent, i);
+
+    if (getNoteStep(current) === targetStep) {
+      notes.push(current);
+      continue;
+    }
+
+    const semitones = interval(current, targetStep);
+
+    if (Math.min(Math.abs(semitones - notesArray.length), Math.abs(semitones)) > 1) {
+      throw new Error('Double flat notes are not implemented!');
+    }
+
+    notes.push(toFlatNote(current));
+  }
+
+  if (notes.length !== 8) {
+    throw new Error('Not enough notes for scale');
   }
   return notes;
 }

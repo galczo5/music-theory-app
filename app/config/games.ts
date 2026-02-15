@@ -108,14 +108,14 @@ export const GAMES: Game[] = [
   },
   {
     id: 'scales-1',
-    type: 'listen',
+    type: 'theory',
     name: 'Scales 1',
     description: 'Identify the scale type based on the provided notes.',
     path: '/play/scales-1'
   },
   {
     id: 'scales-2',
-    type: 'listen',
+    type: 'theory',
     name: 'Scales 2',
     description: 'Construct the requested musical scales.',
     path: '/play/scales-2'

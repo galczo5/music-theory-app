@@ -1,7 +1,19 @@
-import type { Interval } from '~/music/interval';
-import { FlatNote, type Note } from '~/music/notes';
+import { Interval } from '~/music/interval';
+import type {
+  AeolianScale,
+  DorianScale,
+  IonianScale,
+  LocrianScale,
+  LydianScale,
+  MixolydianScale,
+  PhrygianScale,
+  ScaleIntervals
+} from '~/types/scale';
+import type { ScaleType } from '~/music/scale';
 
-export type IonianScale = [
+export const SCALE_TYPES: ScaleType[] = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
+
+export const IONIAN: IonianScale = [
   Interval.MajorSecond,
   Interval.MajorSecond,
   Interval.MinorSecond,
@@ -11,7 +23,7 @@ export type IonianScale = [
   Interval.MinorSecond
 ];
 
-export type DorianScale = [
+export const DORIAN: DorianScale = [
   Interval.MajorSecond,
   Interval.MinorSecond,
   Interval.MajorSecond,
@@ -21,7 +33,7 @@ export type DorianScale = [
   Interval.MajorSecond
 ];
 
-export type PhrygianScale = [
+export const PHRYGIAN: PhrygianScale = [
   Interval.MinorSecond,
   Interval.MajorSecond,
   Interval.MajorSecond,
@@ -31,7 +43,7 @@ export type PhrygianScale = [
   Interval.MajorSecond
 ];
 
-export type LydianScale = [
+export const LYDIAN: LydianScale = [
   Interval.MajorSecond,
   Interval.MajorSecond,
   Interval.MajorSecond,
@@ -41,7 +53,7 @@ export type LydianScale = [
   Interval.MinorSecond
 ];
 
-export type MixolydianScale = [
+export const MIXOLYDIAN: MixolydianScale = [
   Interval.MajorSecond,
   Interval.MajorSecond,
   Interval.MinorSecond,
@@ -51,7 +63,7 @@ export type MixolydianScale = [
   Interval.MajorSecond
 ];
 
-export type AeolianScale = [
+export const AEOLIAN: AeolianScale = [
   Interval.MajorSecond,
   Interval.MinorSecond,
   Interval.MajorSecond,
@@ -61,7 +73,7 @@ export type AeolianScale = [
   Interval.MajorSecond
 ];
 
-export type LocrianScale = [
+export const LOCRIAN: LocrianScale = [
   Interval.MinorSecond,
   Interval.MajorSecond,
   Interval.MajorSecond,
@@ -71,14 +83,12 @@ export type LocrianScale = [
   Interval.MajorSecond
 ];
 
-export type ScaleIntervals =
-  | IonianScale
-  | DorianScale
-  | PhrygianScale
-  | LydianScale
-  | MixolydianScale
-  | AeolianScale
-  | LocrianScale;
-
-export type NormalizedScale = [Note, ...ScaleIntervals];
-export type Scale = [Note | FlatNote, ...ScaleIntervals];
+export const SCALE_PATTERNS: { type: ScaleType; intervals: ScaleIntervals }[] = [
+  { type: 'Ionian', intervals: IONIAN },
+  { type: 'Dorian', intervals: DORIAN },
+  { type: 'Phrygian', intervals: PHRYGIAN },
+  { type: 'Lydian', intervals: LYDIAN },
+  { type: 'Mixolydian', intervals: MIXOLYDIAN },
+  { type: 'Aeolian', intervals: AEOLIAN },
+  { type: 'Locrian', intervals: LOCRIAN }
+];
