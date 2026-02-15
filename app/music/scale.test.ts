@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { getScale, scaleNotes, type ScaleType } from '~/music/scale';
+import { compareScale, getScale, scaleNotes, type ScaleType } from '~/music/scale';
 import { FlatNote, Note } from '~/music/notes';
+import { Interval } from '~/music/interval';
 
 const testCases = [
   // C Major Modes
@@ -102,6 +103,51 @@ describe('normalizedScaleNotes', () => {
 
       result.pop();
       expect(result).toEqual(expected);
+    });
+  });
+});
+
+describe('compareScale', () => {
+  const notes: (Note | FlatNote)[] = [
+    Note.C,
+    Note.D,
+    Note.E,
+    Note.F,
+    Note.G,
+    Note.A,
+    Note.B,
+    Note.CSharp,
+    Note.DSharp,
+    Note.FSharp,
+    Note.GSharp,
+    Note.ASharp,
+    FlatNote.DFlat,
+    FlatNote.EFlat,
+    FlatNote.GFlat,
+    FlatNote.AFlat,
+    FlatNote.BFlat
+  ];
+
+  const scaleTypes: ScaleType[] = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
+
+  notes.forEach(note => {
+    scaleTypes.forEach(type => {
+      it(`should return true when comparing identical ${note} ${type} scales`, () => {
+        const scale1 = getScale(note, type);
+        const scale2 = getScale(note, type);
+        expect(compareScale(scale1, scale2)).toBe(true);
+      });
+    });
+  });
+
+  notes.forEach(note => {
+    scaleTypes.forEach(type => {
+      const otherType = type === 'Ionian' ? 'Dorian' : 'Ionian';
+      it(`should return false when comparing ${note} ${type} and ${note} ${otherType} scales`, () => {
+        const scale1 = getScale(note, type);
+        const scale2 = getScale(note, otherType as ScaleType);
+        expect(compareScale(scale1, scale2)).toBe(false);
+      });
     });
   });
 });
