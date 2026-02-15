@@ -130,8 +130,8 @@ describe('compareScale', () => {
 
   const scaleTypes: ScaleType[] = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 
-  notes.forEach(note => {
-    scaleTypes.forEach(type => {
+  notes.forEach((note) => {
+    scaleTypes.forEach((type) => {
       it(`should return true when comparing identical ${note} ${type} scales`, () => {
         const scale1 = getScale(note, type);
         const scale2 = getScale(note, type);
@@ -140,8 +140,8 @@ describe('compareScale', () => {
     });
   });
 
-  notes.forEach(note => {
-    scaleTypes.forEach(type => {
+  notes.forEach((note) => {
+    scaleTypes.forEach((type) => {
       const otherType = type === 'Ionian' ? 'Dorian' : 'Ionian';
       it(`should return false when comparing ${note} ${type} and ${note} ${otherType} scales`, () => {
         const scale1 = getScale(note, type);
