@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { compareChords, getChord, type ChordType } from '~/music/chord';
+import { chordFromNotes, chordNotes, compareChords, getChord, type ChordType } from '~/music/chord';
 import { Note } from '~/music/notes';
 
 test('compareChords should return true for identical chords (same note, same type)', () => {
@@ -57,4 +57,60 @@ test('compareChords should return false for same note with different chord types
     const chord2 = getChord(Note.C, type2);
     expect(compareChords(chord1, chord2)).toBe(false);
   });
+});
+
+test('chordFromNotes should correctly create a Major chord', () => {
+  const expectedChord = getChord(Note.C, 'Major');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Minor chord', () => {
+  const expectedChord = getChord(Note.D, 'Minor');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create an Augmented chord', () => {
+  const expectedChord = getChord(Note.E, 'Augmented');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Diminished chord', () => {
+  const expectedChord = getChord(Note.F, 'Diminished');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Major 7 chord', () => {
+  const expectedChord = getChord(Note.G, 'Major 7');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Minor 7 chord', () => {
+  const expectedChord = getChord(Note.A, 'Minor 7');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Major 9 chord', () => {
+  const expectedChord = getChord(Note.B, 'Major 9');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordFromNotes should correctly create a Minor 9 chord', () => {
+  const expectedChord = getChord(Note.C, 'Minor 9');
+  const notes = chordNotes(expectedChord);
+  const resultChord = chordFromNotes(notes);
+  expect(compareChords(resultChord, expectedChord)).toBe(true);
 });
