@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { chordFromNotes, chordNotes, compareChords, getChord, type ChordType } from '~/music/chord';
+import { chordFromNotes, chordName, chordNotes, compareChords, getChord, type ChordType } from '~/music/chord';
 import { Note } from '~/music/notes';
 
 test('compareChords should return true for identical chords (same note, same type)', () => {
@@ -113,4 +113,44 @@ test('chordFromNotes should correctly create a Minor 9 chord', () => {
   const notes = chordNotes(expectedChord);
   const resultChord = chordFromNotes(notes);
   expect(compareChords(resultChord, expectedChord)).toBe(true);
+});
+
+test('chordName should return correct name for Major chord', () => {
+  const chord = getChord(Note.C, 'Major');
+  expect(chordName(chord)).toBe('C Major');
+});
+
+test('chordName should return correct name for Minor chord', () => {
+  const chord = getChord(Note.D, 'Minor');
+  expect(chordName(chord)).toBe('D Minor');
+});
+
+test('chordName should return correct name for Augmented chord', () => {
+  const chord = getChord(Note.E, 'Augmented');
+  expect(chordName(chord)).toBe('E Augmented');
+});
+
+test('chordName should return correct name for Diminished chord', () => {
+  const chord = getChord(Note.F, 'Diminished');
+  expect(chordName(chord)).toBe('F Diminished');
+});
+
+test('chordName should return correct name for Major 7 chord', () => {
+  const chord = getChord(Note.G, 'Major 7');
+  expect(chordName(chord)).toBe('G Major 7');
+});
+
+test('chordName should return correct name for Minor 7 chord', () => {
+  const chord = getChord(Note.A, 'Minor 7');
+  expect(chordName(chord)).toBe('A Minor 7');
+});
+
+test('chordName should return correct name for Major 9 chord', () => {
+  const chord = getChord(Note.B, 'Major 9');
+  expect(chordName(chord)).toBe('B Major 9');
+});
+
+test('chordName should return correct name for Minor 9 chord', () => {
+  const chord = getChord(Note.CSharp, 'Minor 9');
+  expect(chordName(chord)).toBe('C# Minor 9');
 });
