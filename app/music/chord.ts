@@ -89,7 +89,7 @@ export function chordNotes(chord: Chord): Note[] {
     result.push(note4);
 
     if (chord.length === 5) {
-      const note5 = transpose(note3, chord[4]);
+      const note5 = transpose(note4, chord[4]);
       result.push(note5);
     }
   }
